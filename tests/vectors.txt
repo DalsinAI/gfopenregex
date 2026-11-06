@@ -1,0 +1,1044 @@
+# GFOpenRegex vectors: random cases (tests/fuzz.py) where ours and the
+# reference agree: Python 3 re for P, the C library's regcomp for E and none.
+# Same format as cases.txt.
+P	b{0,1}	 aa bc1 bcc 	0,0
+P	(a(b{2,}\\s)?\\s.){1,2}	b bacb1	NOMATCH
+P	[^a]{1,2}$|b	11cb aa	3,4
+P	(\\w){2}\\d(\\s+(.*?\\s*)*)(?:.{1,2})b	c	NOMATCH
+P	.*	1b 1 	0,5
+P	.?.*?|\\b\\d?\\d+?[a-c]*?	bb	0,1
+P	(?:b{2,}c(?:\\s+?\\d{2}\\d?|\\w\\w[ab]*?|[^a]{2,}\\d{1,2})?[a-c]ab{1,2}).c[ab]+.\\s{2,}\\w$|\\w{2,}b	b11bbb	0,6
+P	^.{1,2}?a+c*	1 	NOMATCH
+P	[^a]{0,1}([^a]*\\s{1,2}?b)[ab]{2}	c aacb 1 aaa	NOMATCH
+P	\\w??[ab]\\d.[ab][ab]\\sac+?\\w{1,2}?	a1 a	NOMATCH
+P	b{2,}?$	c1 bb	3,5
+P	b{1,2}\\w{2}	 cccc1a11	NOMATCH
+P	\\s{0,1}.\\w|[ab]{1,2}?	c 	NOMATCH
+P	\\w{2}(c([a-c]{2}?\\s*?)*|(\\b\\d[ab]{2,}?)?([ab]b.[ab]b+)+.{2}?)b{1,2}|[a-c]{2}	 bc a11 	1,3 -1,-1 -1,-1 -1,-1 -1,-1
+P	a	 1b b1 cc	NOMATCH
+P	(c*(a\\d*?){1,2}|a*\\d{1,2}?)[ab]??\\d([a-c]\\s?[a-c][^a]|\\d(?:.{2,}c\\d?)\\b\\w{1,2}?|\\dc)\\s{2}?$	a1ba1  1	NOMATCH
+P	a\\s+\\w*c	  	NOMATCH
+P	[^a]{1,2}	b 1bacbbba	0,2
+P	(?:[ab]?|(\\s??.[a-c]{2,}c{1,2}?|[a-c]?|\\d[^a][^a]a+[^a])?\\s{1,2}){2}	 c1b  aa c 	0,0 -1,-1
+P	b{2,}\\d|\\w{0,1}	ccac	0,1
+P	.{2,}	aa11ab1 	0,8
+P	[^a]{2,}?	a 	NOMATCH
+P	.{1,2}	a 	0,2
+P	\\w\\d{2,}	 ca 	NOMATCH
+P	.{2,}[ab]*\\w{0,1}?	a b1cc	0,6
+P	c{2,}$	c abbc b	NOMATCH
+P	^\\d|\\d{1,2}?		NOMATCH
+P	c{0,1}(acc\\w+?|ac\\b)a	ac11 1a	NOMATCH
+P	[ab]?b*?.\\d	  c1 b	2,4
+P	^\\w|[^a]+	1cac	0,1
+P	^[ab]+\\d{2}?	b111ba   ba	0,3
+P	(?:(?:[^a]{0,1}?(b{1,2})\\s+|c|\\w{1,2})\\b.\\w[^a](c?){2,})	b1cb 	NOMATCH
+P	\\w*?(b{1,2}?[a-c]+|(?:[a-c]??)|[ab]{2,})*		0,0 0,0
+P	[ab]{0,1}\\w{2,}[a-c]{2}?	 aba 	NOMATCH
+P	.+?.{1,2}\\d	ac  cb 	NOMATCH
+P	([^a]\\d[a-c]|a*(?:\\b((\\d{2}b{1,2}){2,}?\\d\\w{0,1}|c?(.{2}\\s{2})*?|[a-c]\\d{0,1}[^a]{1,2}))??){0,1}|[^a].??[a-c]??	c c1	0,0 0,0 -1,-1 -1,-1 -1,-1
+P	a[^a]{2,}(\\d*?){1,2}|.{2,}	ca	0,2 -1,-1
+P	^[a-c]*\\d{1,2}?	b c1 b	NOMATCH
+P	^(c*[a-c]{2}?\\w[ab]*|.{0,1}?)	1cbc	0,0 0,0
+P	[^a]b{2,}?\\d[^a]\\w[a-c]{2}	cbca   baaac	NOMATCH
+P	b[ab]{2,}\\d	 1ba c1a c	NOMATCH
+P	\\s+?[^a]{2,}	1cb	NOMATCH
+P	([ab]){1,2}[^a]	a ba1 	0,2 0,1
+P	(c(b?[a-c]*|a+?)\\ba|\\s{2,}?|(?:b{2,}?([ab]{2,}\\w+\\w|\\d{0,1}\\w{2}b{1,2}?|.{0,1}c+\\d+)(b{2})|c{1,2}?b.))?.{0,1}\\w	acc  abccba1	0,2 -1,-1 -1,-1 -1,-1 -1,-1
+P	\\b(\\w?|\\wa(\\s{2}?)(?:c[ab]{0,1}|\\d{2}c[a-c])+)[a-c]+?	 b1ab	1,2 1,1 -1,-1
+P	[ab]{2,}?\\s	ba c 1b  	0,3
+P	[ab]{1,2}|\\s\\d[ab]?\\s[a-c]*	abb1aa	0,2
+P	^(\\w\\s{2}|\\b[^a][ab]{2,})[ab]a{2,}\\s	 1c 1a1a1aa 	NOMATCH
+P	[a-c]*[^a]$	 b cb1 	6,7
+P	a+[ab]{1,2}?[a-c]	 aca1     	NOMATCH
+P	[ab]c$	 c1c b b	NOMATCH
+P	[ab]{0,1}[ab]b	b	NOMATCH
+P	([ab]{2,}|(\\d?(c\\d+?\\sc*|[ab]){2}\\s|\\s*b[ab]+){2}?|[a-c]{1,2}bb)a{2,}	cb b  a 	NOMATCH
+P	[ab]$	a1b1 a1   ac	NOMATCH
+P	.{1,2}b	1baab  	0,2
+P	.*?	cabb aa  	0,0
+P	..b{0,1}?[a-c]+	 c	NOMATCH
+P	((\\d{2}(aa[a-c]){0,1}[^a]{1,2}?|c{2,}?\\d[^a]{2,})([a-c][ab]??|a{2}?|([^a]{2,}\\s{1,2}){1,2}){1,2}?\\d\\w?)	aa  1a1 	NOMATCH
+P	\\d[ab]*[a-c]	c ca aa cb 1	NOMATCH
+P	[^a]	a1	1,2
+P	\\s+	1 1bcbba11b	1,2
+P	[^a]\\wa{2}	bbbbc1a 	NOMATCH
+P	a[^a]	 cb bb	NOMATCH
+P	([^a]{1,2}|(c|(\\b)[a-c]\\d*[^a]+|([a-c]+\\s?(\\sc+)*?){0,1}?bab{2}){1,2})	 	0,1 0,1 -1,-1 -1,-1 -1,-1 -1,-1
+P	[^a]*?([ab])	abbb1 bbcba	0,1 0,1
+P	\\b.	  babb	2,3
+P	\\b[ab]{2,}\\w{2}	a cb 1cbaab1	NOMATCH
+P	b\\b([^a]{1,2}?[a-c]{2})([a-c]|[ab][a-c][ab]{2}){2,}[^a][ab]{2}|[ab][^a]*?[ab]{2,}?	aba  acaa1a 	0,3 -1,-1 -1,-1
+P	\\s{1,2}?((?:[^a]b??)[a-c]+)c		NOMATCH
+P	([^a]?b{2})+.{2}?b?	acbbb11abc	1,6 1,4
+P	\\s{0,1}|[^a]{1,2}?	c b	0,0
+P	[a-c]b([^a]+(\\s{2,}?)?)\\da|[ab]*c	1   111  c1	9,10 -1,-1 -1,-1
+P	((([a-c]{2}?[ab]{1,2}.{0,1})\\w{2}a+|(b{2,}.??\\w{0,1}?)\\w[ab]{1,2})){2,}?[ab].+$	  ca1111 	NOMATCH
+P	[a-c].?[^a]{0,1}?|b	1a1bb	1,3
+P	\\d{1,2}	ac	NOMATCH
+P	(a{2,}[^a]c(?:ab{2,}?c.([ab]{1,2}?[a-c]?\\d*|[^a]+))|a{2}c+?){1,2}		NOMATCH
+P	[a-c]	ab1bb cabb	0,1
+P	^a{0,1}a{1,2}?\\d	bb b1 a bb11	NOMATCH
+P	[^a]{1,2}b*?\\sb[^a][^a](\\s{1,2}.\\b\\ba{2}?)+		NOMATCH
+P	[a-c]{2}?((\\w*[a-c].|a)\\w[^a]{1,2}?[a-c])\\w{1,2}|\\s{0,1}\\s{2,}b*	1b	NOMATCH
+P	\\b([^a][a-c]??|[a-c]b(c*|a{0,1}\\w+)|\\d\\w{1,2}.{2}([^a][^a]|[ab]..+|\\s*[^a]?))[ab]((?:\\b\\w+?|[ab]{2,}.|\\b.?))	1abc1	NOMATCH
+P	[^a]{0,1}	ca	0,1
+P	a.ba	 a	NOMATCH
+P	[^a]c{1,2}$	1bca a1	NOMATCH
+P	(?:(\\b){2,}?)	bbbba1bbb 	0,0 0,0
+P	^\\s([^a]|[ab]*?)[ab]\\d\\w{2}	b 1c11	NOMATCH
+P	\\b[ab]\\s{2}[ab]{1,2}.{2}?$	ca	NOMATCH
+P	a{1,2}	bbb cc b 1a	10,11
+P	(\\w{0,1}?(?:[ab]\\b[a-c]{2}c|\\d{1,2}|\\w{1,2}a+?\\s){1,2}?)b{1,2}	ba1  a	NOMATCH
+P	[^a]\\w{2,}	ca	NOMATCH
+P	\\s{1,2}$	baacb	NOMATCH
+P	^c+?b{0,1}	1acbb11	NOMATCH
+P	[ab][^a]{1,2}a(b{1,2}.|\\s*[^a]*a{2}|(\\d\\s?c[a-c]??|\\b[^a]{1,2}|\\s{2,}?)+)?	1ccc1b	NOMATCH
+P	[^a](b|a*[ab]\\s\\w[a-c]\\s\\w{1,2}|[a-c][ab]{2}?\\d+)(.{0,1}a[ab][^a]|[a-c](.{2}[^a]??)+(\\d{2})[^a]?|[ab](.*){2})c	1abc	NOMATCH
+P	b$	aa1 1	NOMATCH
+P	(?:[^a]{2,}?)	b	NOMATCH
+P	\\w*?c+	 a1 1acc1	4,8
+P	a{0,1}[ab]\\b		NOMATCH
+P	^b{2,}[ab]{2}\\w	b bba 1  acb	NOMATCH
+P	^\\s{0,1}?	1bcbbbbacccb	0,0
+P	(c?c*)+	ccac	0,2 2,2
+P	[a-c](([ab]{1,2}?[ab]{2,})(a[^a]{2,}|b+a{2,}){2,}?)b+\\s+	c1cca c	NOMATCH
+P	.\\s{1,2}		NOMATCH
+P	b(\\w|c+\\ba\\d{2}[a-c]{2}|\\s[^a](b|\\w+?)+)	c1b	NOMATCH
+P	a{2,}?	bbac bb a	NOMATCH
+P	^b+?a{2,}	a  1ac1cccb 	NOMATCH
+P	((b+?)a[ab]{0,1}(((?:\\s{2}?){0,1}|(\\w{1,2}?[^a]+[ab]{2,})a{1,2}|a){2}a*?(?:[ab][^a]?|\\d?|c.c[a-c]{2,})+?)|b??)$	11cbaa  	3,8 3,8 3,4 6,8 8,8 -1,-1
+P	\\wb*	c1	0,1
+P	b{0,1}$	acacab1 b	8,9
+P	.{2,}\\d{2,}	1	NOMATCH
+P	\\d[a-c][a-c](?:.*b|[a-c]??)(?:b{0,1}?)[^a]{2,}\\s{2,}?	b1cccc	NOMATCH
+P	\\d*?	 c11a  	0,0
+P	a{2}a{2,}\\w		NOMATCH
+P	c{1,2}[ab]{1,2}$|[a-c]?	1ca  	0,0
+P	b[ab]{1,2}[^a]{2}a$	  bcb	NOMATCH
+P	[a-c]\\wc	c111	NOMATCH
+P	(\\b.{2,})\\s(\\d{2}a*a)*	b a 1 11	0,6 0,5 -1,-1
+P	c{2,}?[^a]{0,1}c$	ab1a ca c	NOMATCH
+P	\\s[^a]a+?((\\d.{2}){2,}?.b(?:\\w+\\s{2,})+a|((c{2,}bc??)*){0,1}\\s\\db\\b.|((a[a-c]|\\s{1,2}){2}\\d\\d{0,1}[a-c]a)b?a{1,2}c)	ab1 11	NOMATCH
+P	^[a-c]{2}$	 11a	NOMATCH
+P	[a-c]{2,}?		NOMATCH
+P	c[ab]?|([a-c]\\w*|[^a]{0,1})\\sc{0,1}		NOMATCH
+P	\\w{1,2}$	bca  b ab 	NOMATCH
+P	\\d??\\s*?|\\b(\\w[a-c]{2,}(\\d.*?\\b(\\d{2,}|\\s[ab]|c[a-c]){0,1}){0,1}?)a[^a](b|[a-c]*([^a])*){2}	a1bb b c 11b	0,0 -1,-1 -1,-1 -1,-1 -1,-1 -1,-1
+P	a{2}?	1 aa ba11	2,4
+P	^(aa\\s(aa{1,2}?|(?:b+?|b{1,2}a{0,1}|\\da)+|(\\w?\\s|[^a])?)|\\d{2,})*b*?[^a]{1,2}|c{2,}?	aa b1 1bbc	0,6 0,4 3,4 -1,-1
+P	(?:(\\s?\\w)b+|[^a]{2})?|[^a]{2,}	b1ca1 	0,2 -1,-1
+P	[^a]{2,}?a([^a].[^a]*\\d{2})*	b cc111b1aa	0,10 -1,-1
+P	[^a]?|[^a]\\w(?:(?:a{2}c{2}|b*b{0,1})(\\b){2}|\\d{2,}|\\d?)??\\s{1,2}	accc 	0,0 -1,-1
+P	^[a-c]?[^a]{2}?	ccc1b a	0,3
+P	b{1,2}$	ab cb1	NOMATCH
+P	.{1,2}\\d{2}?\\w	11ca	NOMATCH
+P	[ab]{2,}\\w[^a]{0,1}|(acc{2,}[a-c][^a]{0,1})	bbc a1c1cb a	0,4 -1,-1
+P	(.\\d{2}?){2,}?	  c1 1 c1ac	NOMATCH
+P	c{1,2}?	bcb	1,2
+P	(?:[ab]*)+|\\w{2,}	  1b accc1	0,0
+P	\\s{0,1}?	b b b111cb	0,0
+P	c[a-c]{0,1}?	ba 1   	NOMATCH
+P	.{1,2}(.{0,1}|\\d+?)	 ba b1c 	0,3 2,3
+P	(a{2}?c*)c(a|.{1,2}(?:\\d{2,}\\d{1,2}\\w{2,}){2}?){0,1}(\\wb{1,2}|.\\s.(\\d\\s{1,2}?[ab][ab]*){2}|\\b\\b)?	1acb1cbcb1	NOMATCH
+PI	^(?!b){0,1}?|c{0,1}\\W	\n1b1   \n\nBb	0,0
+P	(?:[^a]{2}?){2,}([\\d\\s]){2}?	A1	NOMATCH
+PI	(?i:a){2,}\\B.(?!b)\\A|(?i:a){1,2}	11B	NOMATCH
+PM	b[^a]a[\\d\\s]\\s{1,2}	Bbb1A bBc\n	NOMATCH
+PD	^A\\W{2}[a-c](?:\\sc[^b-c].\n?|[^a]\\W*[^a](\\w|a+\n{2}\\d|[\\d\\s]{2,}?){0,1})\\A		NOMATCH
+PID	\\W{1,2}|(A??\\w|[a-c]{1,2}A{2}\\AA|(?!b)\\A\\B){2}	 B1B\na bc	0,1 -1,-1
+PM	[^a]	A	0,1
+P	[^b-c]{1,2}	\nA a 	0,2
+P	\\W$	a	NOMATCH
+PI	^\\W+	bBBB aAA1	NOMATCH
+P	(?:b)+	 	NOMATCH
+P	[^b-c]c{1,2}	\nB1\nAA1Abb\n\n	NOMATCH
+PID	\\d*?[^b-c]	BacBbc1Ab	1,2
+PD	(c?)	 cc1BAb	0,0 0,0
+P	\\w{2,}?((?=a)??)?(?=a)*	11\n\n\naaB	0,2 2,2
+P	\n{2,}?(\\B\n[\\d\\s]|ABc+|(?!b)*(\\b\\s{1,2})b?){0,1}c{2,}	\n1cBB a \n bb	NOMATCH
+PM	.{1,2}\\w{0,1}	 1	0,2
+PID	[A-Z](?i:a){1,2}$	Aac	NOMATCH
+P	c$	ba1A	NOMATCH
+P	^(?:a{1,2}?|\\B\\s[^a]b{2}?([A-Z][A-Z])[A-Z])([^a]A{2})$	\nac\n 1 1\n aA	NOMATCH
+PI	([A-Z]){2,}[\\d\\s]{0,1}?	bAbbc	0,5 4,5
+PM	a*(.)	cA bbB1B1	0,1 0,1
+PD	(((?=a)*?|\n{2})(.\\d{1,2}){1,2}b{2,})+?	ca	NOMATCH
+PD	B*?$	A\na	3,3
+P	^\\d?([^b-c]{1,2}?|B+?\\A){2}?\\1{2}|(?i:a)??	c\nA\naBBb\nAa	0,0 -1,-1
+PI	^\\B|[^b-c]+	1aA\n	0,4
+PM	[ab]b\\W[A-Z]\\W\\b(?!b)[A-Z]+$	A1Abc	NOMATCH
+PIM	(?=a)*(?!b)(?=a)?	aaA B	0,0
+P	^([ab]\\W[A-Z])\\B\\s(?:[^b-c](A?|[\\d\\s]{2,}[A-Z]?\\s{0,1}?)[^a])[ab]+?|((?=a){2,}[ab]+|\\d{1,2}?)\\W+	\nA1B	NOMATCH
+P	^\\B	B1\nb	NOMATCH
+PD	\\s[^a]\\s	B1a	NOMATCH
+PM	\\d(((?!b)\\w{0,1}[a-c]?)(?=a)\\w{2,}|\\AB(([A-Z]{2,}?\\d{0,1}?c{1,2})?|(?!b){1,2}(?i:a)bA\\W{1,2}))*?\\w	1bAbc	0,2 -1,-1 -1,-1 -1,-1 -1,-1
+PM	(\\W([\\d\\s]|\n??)(.[^b-c]b|[A-Z]{2,}[ab]c)??(?!b)?b{2}|(?:((?i:a)|\\W?[^a]B*|c?\\A)[^b-c]{2}\\w{2}){1,2}?|[^a]){2}?B{0,1}	BacA	2,4 3,4 -1,-1 -1,-1 -1,-1
+PI	\\W[A-Z]{2}	 a\n	NOMATCH
+P	\\B$	\nb	NOMATCH
+PIMD	^[^b-c]{1,2}(\\B|\\Ab*)[ab]\n[^b-c](?=a)\\d|\\b	 B1	1,1 -1,-1
+PI	B*	c a1BBB\na 	0,0
+PI	(?i:a)[a-c]{0,1}	c	NOMATCH
+P	(?:\\A(?i:a)[^a](A??\\B[^a]*)?(\\d{0,1}?|a{1,2})(?i:a){1,2}|[^a])*?|a??	b\nb\n	0,0 -1,-1 -1,-1
+P	c{2}	\n\nb1a	NOMATCH
+PM	\\s	\nba B	0,1
+PIM	\\d{0,1}$	 \nBA	1,1
+PM	^\\W{1,2}c$	 bBb1 B	NOMATCH
+PI	\\d{1,2}[A-Z]	\n11 c	NOMATCH
+PD	\\d{0,1}[ab]?[A-Z]	\n1\nA  AcBBb\n	3,4
+PID	.	A 1\nca1	0,1
+PD	c?(?i:a){2,}	\n1	NOMATCH
+PD	B??|(?i:a)b{2,}?	B c 	0,0
+PIM	^[a-c]{1,2}(?i:a)??A	bAcAa  ac c	0,2
+PI	c{0,1}	AAbbb \nb 	0,0
+PMD	\\W{1,2}|(\\A)+\\s[A-Z]+	b	NOMATCH
+P	[\\d\\s]*[A-Z]+|\n{2,}	AB1 b1 bb	0,2
+PIM	a*?|c{1,2}?(?!b)	\nb\n1bb	0,0
+PD	b*\\W+	 a1c1 c	0,1
+PM	[^b-c](?i:a)bB+	B\nBc baB\na\nc	NOMATCH
+PIM	[^a]{0,1}	aAAcc AbA	0,0
+PM	\n{1,2}\\s+?|A+A{1,2}[a-c]??	1B 	NOMATCH
+PI	\\Bc{2}	b\n\n1	NOMATCH
+PD	\\W+(.*|\\b.){2,}		NOMATCH
+PM	B{2,}a$	baB	NOMATCH
+PID	\\d?	B1111B\n	0,0
+P	a*\\s$	1\na	NOMATCH
+P	((?:(b){1,2})\\W*?(?!b){2,}(?i:a)((?:\n\n{1,2}?|(?!b)){1,2}){0,1}){2,}	bbcA	NOMATCH
+P	\\w+$	a\n1\nBA	4,6
+PID	c{1,2}\\w	a \n	NOMATCH
+P	(?i:a)+?	\nb1 11bBc	NOMATCH
+P	[^a]?a{0,1}	B1 1AA 1\nA1\n	0,1
+PI	A	\n	NOMATCH
+PM	(?=a)		NOMATCH
+PIM	((?:\n{0,1}|.?))	B	0,0 0,0
+PD	\n{2,}\n{2,}	1bbAcc\nB1a	NOMATCH
+PD	a	baa\nb1cA	1,2
+PI	B*?(?=a)[\\d\\s][\\d\\s]A([A-Z]*A?)*[^b-c]{2}?	Bac1a aB \n	NOMATCH
+PMD	\\s*	AaAa11cc	0,0
+P	\\s+?(?=a)(A{2,}?(.B{1,2})[^a]{2}?|[a-c]){1,2}?	\n B	NOMATCH
+P	.*c[\\d\\s]$	1  A	NOMATCH
+PM	A?(?=a)+?c{1,2}|b[A-Z]{1,2}?		NOMATCH
+PM	[ab]{2}[^b-c](?!b){2}?	1\na   Ab	NOMATCH
+PIM	(A\n{1,2}|[\\d\\s]{0,1}){0,1}?	 ca\nB11\nA1aB	0,0 -1,-1
+P	\n*([^b-c]??|c{0,1}bc|A{2}?\\w+\\w)(\\d?[\\d\\s]{1,2})\\w\\W(?=a)[A-Z]B??	c aAA 11B\n 	NOMATCH
+P	([\\d\\s]+((?!b)*\\s{2}?|\\d|A{1,2})(A+|(?i:a)*?|\\W+)\\W?)+?a*	c	NOMATCH
+P	[^b-c]{2,}?	 	NOMATCH
+PM	(?:\\w*(?:[^b-c][a-c]{2}[^a]{2,}?)[^a](?i:a){2,}){0,1}?[ab].*?	1a1\n\n b\n1cc	1,2
+PD	b\\W+|(?i:a)[\\d\\s]\\d*?	c	NOMATCH
+PM	\\BA[^a].?	 aba	NOMATCH
+P	^c{2,}\n{2}(?!b)	c\nc aBBBaAcA	NOMATCH
+PM	(a){0,1}B\\1{0,1}	 \nB1aa	2,3 -1,-1
+P	(?:(?!b)?B\\d{1,2}?|\\B\\w)?\\w(?=a)[\\d\\s]B{2,}	c	NOMATCH
+PM	[A-Z]([^b-c]?|(B*[^b-c]{2,}|[\\d\\s]{1,2}(?=a)?)[a-c]{2,}?)	c1bcBBABcb	4,6 5,6 -1,-1
+P	\\d{1,2}?|b	BcBa 	NOMATCH
+PD	\\B|[^a]+[A-Z]([ab](\\w*?[^b-c]+?(?!b){2}?))??	A\ncaa	3,3 -1,-1 -1,-1
+P	\\d+|(?i:a).*	bAb1aaca 	1,9
+P	\\d{1,2}\\w(?=a)\\w[\\d\\s]{1,2}$	\n\nA1baa\n\n\na\n	NOMATCH
+PIM	(?:[a-c](?i:a)+){0,1}	Abb\n1	0,0
+PM	[ab]{1,2}	 B1B	NOMATCH
+P	(?i:a)??([\\d\\s]*?)+|\\1{1,2}[^a]b{2,}\\B	\nAb	0,0 0,0
+PI	[^a]\\W{2}$	1ba c	NOMATCH
+PM	((?:\\B|c{2,}[ab]{2}?[ab]{2})|a{2}|(?!b)?)([a-c]*)\\A|[A-Z]{2,}?(?i:a)*(.){2,}	aB	0,0 0,0 0,0 -1,-1
+P	([^b-c]*(?i:a)[^b-c]{2}a*?)[ab]+(?=a)	1 \n1Ac\naAc	NOMATCH
+PM	(\\b([a-c]??|B??)??B[ab]+|\\d){2,}?(?i:a)	\nAc\n BA1c \nB	NOMATCH
+PMD	(b{1,2}(?=a)?((\\dA{2}(?!b){1,2})[a-c]c{1,2}?){0,1})|[\\d\\s]?	BAB1\na1\ncc1\n	0,0 -1,-1 -1,-1 -1,-1
+PD	B{2,}	 Bb\n bA c  B	NOMATCH
+P	(\\d+)	1bB	0,1 0,1
+P	\\b(?=a)*	a\n bb	0,0
+PM	b+?b*\\A|a*	bB 1B\n\n	0,0
+P	[A-Z]([A-Z]\nA{1,2}?){0,1}[^b-c](?i:a)*[^a]	a	NOMATCH
+PIM	((?i:a)?(?!b))c+	BacbA\n1\nac A	1,3 1,2
+P	[\\d\\s]{2}?\\B	Ab A	NOMATCH
+PMD	(?i:a){1,2}	   aca \nb \nc	3,4
+PID	(\\B\na+?B|b{0,1})(?!b){1,2}[\\d\\s]	ccbbca	NOMATCH
+P	\\A	bb	0,0
+PI	^c{2,}?(?=a){2,}$|c	a \nc11A1c 	3,4
+PIM	^.{2}?	b\n1\nAA	4,6
+PM	[A-Z]\n	1aB1b	NOMATCH
+P	cb{2,}|\\W{2,}?(?i:a)	1a\nbbc	NOMATCH
+PI	a??	1	0,0
+PD	^[^b-c]*?b*?	a\n  a1	0,0
+PM	\\W{1,2}?$|\\w*\\d{2}	\naBAab1a	NOMATCH
+PM	[a-c][^b-c]\n*	Bac\nc1bBa	2,4
+PM	[^b-c]A{0,1}	1\nbB\na1ccBBB	0,1
+E	a[ab]a{0,1}$	a1 	NOMATCH
+E	a+$	1cbc a	5,6
+E	^[^a]{1,2}	 a a aacba1c	0,1
+E	[ab][^a]?	aaba   c 	0,1
+E	.[^a]+	c c1a	0,4
+E	[ab]((.?.[ab]{1,2}|[a-c]{2,}b.).?|(b|[^a]{0,1}[a-c]{0,1}[^a]|[ab]).+|(c{2,}|[ab]+c.*|[ab]*a*b+)?){2}[a-c]+[ab]	11ac1 cc	NOMATCH
+E	(b(c+[a-c]{2,})?(c{2,}|[ab]?ba[ab]?|c{0,1}[ab]+){2,}|[ab]{1,2})a*(b+|[a-c](.{2,}[^a]{1,2}a|.)a[ab]*)	 1b1caca 1	NOMATCH
+E	^.{1,2}|[^a]	c	0,1
+E	[a-c]{2}	abc1 ab	0,2
+E	b(c{2,}|.c[a-c]?aa[ab][a-c]{0,1}b)*	aaabca11	3,4 -1,-1
+E	([a-c](.{2,}(.|(.{2})[^a].{2,}.a?)?){2}|(ab?.|bb{0,1}|b{2}.[a-c][^a]{2,})[^a]{2,}|(a{0,1}bc?)[ab]{0,1})+[ab]{0,1}	 1cc	NOMATCH
+E	([^a]{1,2}[a-c]*)c{2}c{2}$	c aa c	NOMATCH
+E	b{1,2}b{2}[^a]	b	NOMATCH
+E	([a-c]*c*(.([^a]+.{2,})?((a{0,1})+([ab]|[^a][a-c]*)?a|[a-c]a+cc.)+c?|[^a]{1,2}[a-c]{2})?)a+		NOMATCH
+E	b{2}c$	b1b1 1c 1c	NOMATCH
+E	[a-c]+	abaacbca  1	0,8
+E	a?	1 1ab 1b ba	0,0
+E	^([ab]{0,1}|(c{0,1}[ab][^a]*)+[^a]{1,2})(([ab]+[a-c]c{0,1})+)c(a|[^a]{2,}).([ab]{0,1}c{0,1}|b{2,}){2,}	c1  cca	NOMATCH
+E	([ab][ab]?b{1,2})+b{2,}(b[a-c][a-c]|(([^a]+b[^a]*){0,1}a*[^a][^a]b[^a]).+[^a]c[a-c][a-c]*){2}|[ab]b	c aaca	NOMATCH
+E	^([a-c]{1,2}a*|c{2,}[a-c]).[a-c]c[ab]b(.{1,2})*c	1 a1ab1  aa	NOMATCH
+E	[ab]|.[ab]	111aa1 	2,4
+E	.{2,}	a 1	0,3
+E	a[^a]{2}a([ab]{1,2}|.{1,2})aa+	aa1b b11	NOMATCH
+E	.{0,1}[ab]|..?	b	0,1
+E	[a-c][ab]c{0,1}	1c11b a1	NOMATCH
+E	(([a-c][^a]([a-c]|[^a]c*){2}|.b*)[^a]?.?b*)+[ab]	1 c11cc	NOMATCH
+E	[a-c](([^a]+[^a][ab]*)?ca{2,}(a{2,}(aa*b|[a-c]*a|b{1,2})?c?|.+a+|a{2,}))+[a-c]?.		NOMATCH
+E	b(.(.)c[^a]?(a*(a?c+)?|c{2}a*|[^a][ab]*))[^a].[ab]([a-c]|[^a][ab]..{1,2}|caaa{2,})$	 c  c1 ccc	NOMATCH
+E	[ab]$|[ab]{1,2}	acc1bbab1cc	0,1
+E	b{1,2}|[ab]+	a 11 ba  ca 	0,1
+E	^a{0,1}b{2,}$	bac1acaa1b	NOMATCH
+E	b*[^a]{1,2}.|[^a]+c(.{2}|a){0,1}	ca 	0,2 -1,-1
+E	(.{2,}|[ab]{1,2}a{1,2}){2}[^a]([^a]c*[ab]+|[a-c]?[a-c]+|a[ab]{2})*	aa ababacac	0,11 8,10 -1,-1
+E	^[^a]{2}b	abbcac 	NOMATCH
+E	^(ba[a-c][a-c]([^a]b{2,}|c{2,}(b*ac)+)[^a]+){1,2}(.|[a-c])[^a]{2}	 aa cb	NOMATCH
+E	(.{0,1}[a-c].[^a]|.+)*	1aa a1	0,6 4,6
+E	[a-c]{2}	1bc	1,3
+E	^c	1ba11b b	NOMATCH
+E	^[a-c]?([a-c].{1,2}[ab]{0,1}|([a-c]b[ab]?|([^a][a-c]{1,2}|c+ba*)?([^a][^a]|[ab]{1,2}[ab]+a{2}){2,})+){0,1}$	bbba1cb  ca	NOMATCH
+E	^a{0,1}[ab](([a-c]{0,1}b{0,1}|a*[^a]?){2,}[a-c]{0,1})(ac*.)	b cbb11  b	NOMATCH
+E	[a-c]*|a?	1111bac1a 	0,0
+E	(.[ab]{0,1}).c+aa{2}|a		NOMATCH
+E	b*		0,0
+E	([^a]+c*([ab]+|[^a]{2,}|[ab]{2}[ab]?).|c?a([a-c]a?|a{2,}a{2}[a-c]){2,})c$	ac 	NOMATCH
+E	b([ab]{2,})a{2,}	 a	NOMATCH
+E	b[a-c]((b{0,1}b{1,2}){0,1}[^a]+|[ab]+[ab]b+(c{1,2}c+|.|[^a]{2,}[a-c]*){0,1}){2,}[^a]{1,2}c+	  b 1ac ac1	NOMATCH
+E	([a-c]b{2,}(b.?a{2,}(.a|[^a]+[a-c][ab]?)+|(a{0,1}){0,1}.*c)([^a]*|c[a-c]?a[ab]{2,}|(.[^a]*[ab]{0,1}){0,1}))	bcb1 1bcac b	NOMATCH
+E	^[a-c]([ab]?c*b[^a]([ab]{1,2}[^a]{2,}[a-c]{2,}|b[a-c].|[a-c]{0,1}[^a]){0,1})+|([a-c]|[a-c]?|b*[^a][a-c]+)	abcca1 bc a	0,4 1,4 3,4 -1,-1
+E	^a{2}.?c[ab]b[^a]?	a  	NOMATCH
+E	.*	c	0,1
+E	^[a-c]{1,2}	cbc 11b1aca	0,2
+E	^[ab]((.?c?[^a])(a{2,}bc{1,2}|[ab]c?|[^a]{0,1}.{2})*|a{2}[^a]*)*	 acb 	NOMATCH
+E	c{2}	a	NOMATCH
+E	a{0,1}$|c([a-c][ab]?|[ab]ca).[ab]ab[a-c](([ab]b{2}a)+bc*)a?	cb 1	4,4 -1,-1 -1,-1 -1,-1
+E	.{0,1}	ccacbacb1 	0,1
+E	(aa*[ab])(b.?)b[a-c]b?	ca a1	NOMATCH
+E	((.|b*|.*a?)a*|c{1,2}[a-c]{2,}(c{0,1}bb{2}|[ab][ab]{1,2}){1,2}|(cc?|a*c{1,2}a{1,2})*b*[a-c]{1,2})a{2}	a a	NOMATCH
+E	((bc{1,2}b{1,2}|b{0,1}([^a]*b*[a-c]?)+[^a]{2}){1,2})[ab]{2,}	1b   	NOMATCH
+E	c{0,1}a	a 1	0,1
+E	[ab]{0,1}[^a][^a]b+	bc1c 1aa 	NOMATCH
+E	[^a]?	    b1c	0,1
+E	c.+$	bbcbba ab	2,9
+E	[^a]	bc1a1ca ab	0,1
+E	((([ab][a-c]?|[a-c]{2}){2,}(c{1,2}.{2})*[^a]?|[ab]+[a-c]a([a-c]+|[^a]{2}[ab]*|.b))?[ab]{2,}b{0,1}).?b		NOMATCH
+E	c[ab]+([ab]{2,}|c{1,2}.{2,})cc{0,1}$	bca1	NOMATCH
+E	([a-c][^a](.{2,}.)(.[^a]|a[a-c]{0,1}[^a]?c|[ab]{0,1}[a-c]){1,2})?(.?[a-c]{2}){2,}	b11 a	NOMATCH
+E	(([ab]|c|[ab]([^a]+[a-c])?)|([ab])*)[ab]{1,2}	a1abbc	0,5 0,3 0,3 1,3 -1,-1
+E	b{2}(([^a]b*|.|cb{1,2}c{2})[ab][^a][ab]|b{2}[ab]{2,}|[ab]{2,}c)	b	NOMATCH
+E	[^a]*|(([^a]+(.{2}.)){2}[^a][ab]ab{0,1}|.{0,1})*	 	0,1 -1,-1 -1,-1 -1,-1
+E	^c(([^a]*b{2}[ab]{2,}|(a+[ab]*[a-c]*|c{2,}.{1,2}|c.{1,2}){1,2}){2,}a*.)[^a]b*	b  ac1aa	NOMATCH
+E	c*	a b11	0,0
+E	a	1  	NOMATCH
+E	^[ab]baa+	cccb	NOMATCH
+E	[^a].([a-c]{1,2}b{2,}|c{0,1}[a-c]){1,2}c	b 11aa	NOMATCH
+E	[a-c]{2}[^a]*	11cacb cc 	2,10
+E	[^a]{1,2}|bb{0,1}	c c cb	0,2
+E	a.	bacaca1	1,3
+E	[^a][a-c]{1,2}		NOMATCH
+E	a((ac{0,1}|([a-c]+)*a[a-c]{0,1}|.+.[^a]{2})a{1,2}a){2,}a{2}$	1ccba1cc ab	NOMATCH
+E	a{2}[ab]{2,}	1a1a	NOMATCH
+E	^([ab])	 ab11	NOMATCH
+E	a{1,2}[a-c]	c1	NOMATCH
+E	c{1,2}a[ab]		NOMATCH
+E	b{1,2}[^a](([ab]|(a{1,2}.{1,2}|c{1,2}.a{2,}|[ab]{0,1})?(a*a?){2}.)[a-c]{2,})+	11cb1 	NOMATCH
+E	[a-c]{2,}a{2}|[ab]{2,}	cabccbcc 	1,3
+E	^[ab][^a]{1,2}	a1	0,2
+E	a$		NOMATCH
+E	(a([^a]*)+[ab]{2,}|aba[a-c]c(b{2}.{1,2}(.*[ab]{1,2}[ab]{2,})*|.[a-c]b{0,1}[ab]b*|.[^a](a[^a]))?)a{2}	 1aa b accc1	NOMATCH
+E	[a-c]([a-c]ca{2}|.([a-c]{2}){2,}c)*	a	0,1 -1,-1 -1,-1
+E	b{2}((aa)[ab][a-c]{0,1}|[^a]{2,}|[a-c]b{1,2}[^a]?c?){2}[^a]c*|[ab]{0,1}	ac1 cacb ca	0,1 -1,-1 -1,-1
+E	[ab]{1,2}$	 caa1 b	6,7
+E	^[ab]{0,1}	1a1bcaa	0,0
+E	^c*$	a a 	NOMATCH
+E	[a-c]?|[a-c]	b	0,1
+E	(.a+([a-c]{2,}c{1,2}|[ab]|a+)b|(c{2,}|[ab][a-c]|b{1,2}[^a]{1,2})b[^a]+[ab]{1,2}.{1,2}).{2}([ab][^a]){2}	 a	NOMATCH
+E	[^a]{1,2}a|[^a][^a]*	 a caaa	0,2
+E	b{2,}	abbbcac	1,4
+E	bb{2,}(([a-c]?c{2}.*)([a-c]{2,}|[a-c]{0,1}).+b[a-c]([^a]|[ab]b[ab]{0,1}a.|(.+b|.{2}){2}bc+c[ab]+)*|c)	cabb b aac	NOMATCH
+E	c[a-c]	a11a1 c1 ab	NOMATCH
+E	a?[^a]+	 bc1a ab	0,4
+E	[^a]?[^a]+$|.b.b[a-c][^a]{2,}	a1bc	1,4
+E	[a-c]{2}c$|(.+c((cb+|[ab]{1,2}|bbc*).[ab]?|[^a]*|c{1,2}b*)|c{1,2})b	1ca11 cc11	NOMATCH
+E	[ab]|b	a1ccac11c1c	0,1
+E	([ab]|(b{2,}){0,1}){2,}$	1a1bca 1	8,8 8,8 -1,-1
+E	((([ab]{0,1}c?[^a]{2})){0,1}[^a]|(([ab]+.[^a]{2,}|[ab][ab]+|c[ab][a-c]+){2,}|[a-c]+[ab][a-c]{2}))[^a]*|[^a]c*	ab 	1,3 1,2 -1,-1 -1,-1 -1,-1 -1,-1
+E	([a-c]{2,}|[a-c]+|c){1,2}	1b 1a a 1acb	1,2 1,2
+E	([^a].[^a]+|([a-c][^a]+c{0,1}|(b{2,})[^a]{2,}|[a-c]{2})[a-c]*)$	1	NOMATCH
+E	^c*c{0,1}c?	cab 1aa1	0,1
+E	.?([^a]{2,}(.)[ab])*	c  bb1	0,5 1,5 3,4
+E	[a-c]$	1b1 	NOMATCH
+E	[^a]?.{2,}c{1,2}|[ab]{2}((([^a][ab]+[^a]){1,2}.b*)+b{2}c+)+	aaacc b	0,5 -1,-1 -1,-1 -1,-1
+E	c[a-c]{0,1}	accbc1  1	1,3
+E	..	b1cc1	0,2
+E	[^a]?.?c	11 bba 1	NOMATCH
+E	(bb[^a][ab]{1,2}[a-c])a[^a]+.*([a-c]+){0,1}|.{2,}b{0,1}([ab]*b?|[ab]{0,1})+	 ac  a11a1	0,10 -1,-1 -1,-1 10,10
+E	b*c	c	0,1
+E	b?[ab]|[ab]{2,}[^a](a|[ab]{2,}.{1,2}b?)[^a][a-c]cc*	b cc1ccb	0,1 -1,-1
+E	[ab]([^a]{0,1}.[ab][a-c])+b	cb abaac1cc	NOMATCH
+E	^b|[ab]{1,2}[ab]c+([ab]{1,2}a[^a]{2}(b)a|([ab]*)([a-c]{1,2})[a-c].[a-c]{0,1}b*)	1 abcb	NOMATCH
+E	[^a]{2}b([a-c]{0,1}([ab]{0,1}.*|.{0,1}a?)?.{0,1})([ab]{1,2}){0,1}$		NOMATCH
+E	a.([^a]b{2,}a)[ab]*b(c[a-c](ba?a?|[ab].)(c.+c{0,1})+)?|[ab]{2}	ccaaaa	2,4 -1,-1 -1,-1 -1,-1 -1,-1
+E	^[ab]{0,1}([^a]*[^a]|(a.{2}b[a-c]?[ab]).{1,2})+$	acabc1b aba	NOMATCH
+E	[a-c]?.*	c  	0,3
+E	(.a?([a-c]([^a])[^a]{2,}|[^a](cc){0,1}){2,}[^a]|(((a[^a]c{1,2}|[^a]a{0,1}|a.{2,}c)[^a])){0,1}([ab]|.+[^a]+)[^a]+){1,2}	a 1ca1aaca	0,6 4,6 2,3 -1,-1 -1,-1 -1,-1 -1,-1 -1,-1 4,5
+E	([a-c]?).[a-c]c([^a]b([^a]{2}){1,2}([^a]{2}|c[^a]{1,2}|a).|([a-c]|caa+){1,2}|[^a]*){2}|[^a]{2,}[^a]	c1 b	0,4 -1,-1 -1,-1 -1,-1 -1,-1 -1,-1
+E	(([a-c].(.b|a){2,}|a|a[^a]{0,1})([^a])?[a-c]+([^a]*([^a]{2}[ab]{0,1}[a-c]+|b+.[^a]*|[^a]{1,2}a*b{2})[ab]c{1,2}){2})+	 acc11babb	NOMATCH
+E	((c{0,1}){2,}.*(..|(b{1,2}|[a-c]*|a)([a-c]{1,2}a|b{2}c{0,1}[a-c]|[ab]?b{2,}b{2})|.[^a])).{2}b	ba	NOMATCH
+E	b+[^a]+	b1aa	0,2
+E	([^a]?.?(ba([a-c]?){0,1}){0,1})*ca{0,1}|[^a]{0,1}	 cab	0,3 0,1 -1,-1 -1,-1
+E	a{2}	ac1	NOMATCH
+E	[^a]a((b[ab]{1,2}[a-c]{1,2}|b{2,}.*|[ab]*[a-c]{2}b{2,}))+c*$	 cbab 1bb	NOMATCH
+E	^([^a]+c{2})	aba1	NOMATCH
+E	([a-c]{2,}[ab]{1,2}(([a-c]*[ab]?a+|a{0,1}[^a]{1,2})?b.{0,1}.+)+)[ab]{0,1}.b*[ab]{1,2}$	a	NOMATCH
+E	[ab]c(b?[ab]{2,}[^a]+|a{0,1}([^a]|c*[^a]?[ab]{2})(b{2}a{0,1}|.[^a]+[ab]{1,2}))[ab]{2,}[a-c]?	aabaaccc	NOMATCH
+E	c[ab]{2}$	  111 	NOMATCH
+E	.([^a]a[a-c][a-c]{0,1}[^a][^a]|([a-c]{0,1}[a-c]*[^a])|c[^a]).*(.c+a?){1,2}		NOMATCH
+E	a{1,2}b.	1   	NOMATCH
+E	[^a]{1,2}	cb    cb1ba	0,2
+E	^b{2}([a-c][ab]{1,2})b?$	 bb cb1c  a	NOMATCH
+E	[ab](a+[^a]*((b+b*[a-c]{2,})(c.*c|c[^a]{1,2}a|[ab]a)?)+|c(.{2}|[^a]cc{2,}|[ab]{2,})c|[a-c]){2,}	aba	0,3 2,3 -1,-1 -1,-1 -1,-1 -1,-1
+E	bb?a?|a?	c a11a	0,0
+E	[^a]ba{1,2}	11 	NOMATCH
+E	(.*a){2}[ab]{2}	c a1abbb b 	0,7 3,5
+E	^[a-c]a+([^a]+[ab]{2,}aa|[ab]*)?	aba1 cc  ca	NOMATCH
+E	([^a]*([a-c]{2,}|.+[^a]{2,}|[ab]+)c[^a](.{1,2}|[^a]?[ab]+)*|[a-c]{2,}[^a]{2}[ab]*|.+)$|b{0,1}	1bccc	0,5 0,5 1,3 -1,-1
+E	.[^a]c*	 cb1111c ba	0,2
+E	.	aaa	0,1
+E	^(.{0,1})([a-c]{2}b*.?){1,2}|.+b(c+a*|([a-c]{0,1}[ab]|a{2,}|([a-c]{1,2}[ab]){0,1})b[^a]b?a[^a]+)+		NOMATCH
+E	b{0,1}	 1 ab1	0,0
+E	[^a][ab]([ab]?c|[a-c]+[a-c]?[a-c]+|[ab]{2}){2}	b1a	NOMATCH
+E	(cc[^a]c([ab]{1,2}c?)*){2,}	1babc baaca1	NOMATCH
+E	[^a]c{2,}	bbc1a111	NOMATCH
+E	b{1,2}|[a-c].{1,2}	a	NOMATCH
+E	b{0,1}		0,0
+E	([^a][a-c]*b?)	1	0,1 0,1
+E	.|([^a]([ab]+[a-c]a[a-c][ab]*|c{1,2}a[^a]?.|c*){1,2}b[ab]*.+)[ab]	11cc a 	0,1 -1,-1 -1,-1
+E	a*|bb*	cac1  acc1 	0,0
+E	[a-c]?	1c  cc  cb	0,0
+E	([a-c].[a-c]{2,}([a-c]+[a-c]?c|.{0,1}|.+[^a]+)c*[ab]|..c[^a]{1,2})a[a-c](.{0,1})	b 	NOMATCH
+E	a{2,}	 b 1abca 1	NOMATCH
+E	^b	b	0,1
+E	ac[^a][a-c]*	bc 	NOMATCH
+E	(ca{2,}.[ab]{2}|b{1,2}([a-c]{1,2}c|cc+)*([^a]?|.*b{2}|.{2}[ab]{0,1})*|..{1,2})a([a-c]{2,}c{2}|a{2})[^a].b[^a]{2,}	aac ac	NOMATCH
+E	^[a-c]c{1,2}$|[a-c]{1,2}.?[a-c]		NOMATCH
+E	b?		0,0
+E	b?|.{2}cb?(a([ab]+|[^a][ab])(b{0,1})[^a]?){1,2}	b1ab	0,1 -1,-1 -1,-1 -1,-1
+E	([a-c]b)(a+.c{1,2}.+|b?|[^a](a.{0,1}[a-c]+|[^a]{1,2}b?a|c{2,}b.+)+)*[^a][ab].[a-c](b*[a-c]+|[^a]?)[^a]*a	bb ca	NOMATCH
+E	^a|([a-c]{2}){2,}([ab]{1,2})[^a]?[^a]{2,}	11b  b	NOMATCH
+E	c{2}(([a-c].[a-c].{2}[a-c]{2,})+[ab]{1,2}|[a-c]?[^a]){0,1}c[a-c]c	cba 	NOMATCH
+E	aac[^a][^a]?b(..|c{2,}.[ab])a*	bc1   bbab 	NOMATCH
+E	^[^a]?	bbbcccc	0,1
+E	[ab]?$	 b1	3,3
+E	.{2}(.?a|[ab]*[ab]{1,2})+[a-c]|.?	cc caac b	0,1 -1,-1
+E	[ab]?((([a-c]{2}[ab]*[ab]+){1,2}b{2,}|([ab]{0,1}.{2,}|[ab]+[^a]*)|[ab][ab]{1,2}([ab]c|[a-c]){2}.?){2,})c*	a1a 1c1c	0,8 1,8 6,8 -1,-1 6,8 -1,-1
+E	a{0,1}	1 ccb	0,0
+E	c?(a*(.c[^a]+|..{0,1}c{0,1}c[^a]{0,1}|[^a]+c{2,}[ab]{1,2})[^a].cb*[a-c]{0,1}|(.{2}[^a]{2})|c{2})+[ab]{0,1}$	 c11caa11a	0,10 5,9 0,2 5,9
+E	(c?c[ab]+|b{2,}[a-c]{2,}[a-c]|([a-c]{0,1}|a*[a-c]*|b)(c*b[^a]{0,1}|a*)+)([^a]{2,}.*([^a]{2}.{2,}b)*){1,2}bb?	   bc 1	0,4 0,0 0,0 0,0 0,3 -1,-1
+E	a*	 a1 1acc1	0,0
+E	[^a]{1,2}b{2}((.{0,1}[ab]{2}|ca|[^a]){2,}c{2,}|[^a]([ab]*){0,1}[ab]a[ab](.{0,1}|[^a]{1,2}b)*(c{2}[ab]+[^a](.*)){2}){1,2}	11b 	NOMATCH
+E	c?(((c{2,}b*b?){2,}([^a]?[ab]+|a{0,1}b+|c[ab]{2,})a{2}|[^a]+.+|[^a]*)([^a][a-c].)+a){1,2}[a-c]{2,}|a{2,}.{0,1}[ab]{1,2}	1ba1	NOMATCH
+E	b*	bbc	0,2
+E	ab*	1 cacccacc  	3,4
+E	[ab][ab].|(b[^a]{2,}|c{2}([a-c]{2}[^a][^a]+[ab]{2,}|c*[ab]{1,2}).{2}){0,1}	a 1	0,0 -1,-1 -1,-1
+E	ba*	1ca cca 1	NOMATCH
+E	b{1,2}$	aaa1 a  a	NOMATCH
+E	[ab](([a-c]{1,2}[ab]|.*.{2}[ab]{2,})a[^a]{2,})([^a][ab]*a?|(.{1,2})?(b|[^a]?)[^a])(ac[a-c][a-c])*	aa a  b b1a	NOMATCH
+E	cb([a-c]{0,1}c){2,}[a-c]|[a-c][ab]*		NOMATCH
+E	[a-c]	cabbbaacc1a1	0,1
+E	[a-c]	 a  1	1,2
+E	^a+|[ab]{2}[ab]{2,}	 1a1 	NOMATCH
+E	[ab]..([^a]*c|[a-c])aa(a{0,1})a{2}	c11bc1b b1	NOMATCH
+E	^(a|(.){2}|c+[a-c]bc([ab][ab]a{2}|[a-c]a.)*){1,2}a{1,2}	 c  a1	0,5 2,4 3,4 -1,-1
+E	a	c1ca  a  bb	3,4
+E	^[ab]c?([a-c]{1,2}[a-c]+[ab]{1,2})cb([a-c]{2,})[ab]{1,2}.	 	NOMATCH
+E	([^a]{2}b{2}c{2}|c[ab][ab][ab]c(a)ab{1,2})*[^a]+.{0,1}|(b[ab]){0,1}.a.[a-c][ab]c([a-c]?|a.|c{2}){2}	cbb	0,3 -1,-1 -1,-1 -1,-1 -1,-1
+E	.{1,2}.a	111a	0,4
+E	\n[[:alpha:]]{2,}A+(([A-Z]+|[A-Z]{2}|[^a]*){1,2}[a-c]?)(([ab]*|\\1+|c*)([a-c]|[a-c]|[^b-c]?c?B{1,2}))+	\ncbab	NOMATCH
+E	b{0,1}[^[:space:]]b	 AA\naB 	NOMATCH
+E	^.+		NOMATCH
+EI	\n+A{0,1}	cbcB1B11Ba	NOMATCH
+EI	[^b-c]*[[:alpha:]]	1B1 BBA	0,2
+EIN	(b?A[ab]{2,}\n{2,}|([a-c]*)\n*[ab]\\1)\\1{2,}[[:alpha:]]{0,1}	\n	ERR 6
+E	A\n(([^[:space:]]{1,2}[ab]\\1)|b([A-Z]{2}|.*a){0,1}){2,}|b	\n	ERR 6
+EIN	([A-Z]{0,1}){0,1}	A	0,1 0,1
+EN	[ab]	cBB1bb1  	4,5
+E	[ab]*|a{2,}	c ac1	0,0
+EN	[^a]?[^a]*((([ab]?[a-c]{2})+\\1{2})[^[:space:]][^b-c][ab]+){0,1}	 A	ERR 6
+EI	[^b-c]	A\n\n	0,1
+EN	(A)	B	NOMATCH
+EIN	[[:alpha:]]a[[:alpha:]][[:alpha:]]c[A-Z]((([A-Z]|[ab]?))+([a-c]|a|AA.{2,})B[a-c]|b*.{1,2})b	\n1Bb	NOMATCH
+EN	[^b-c]{2,}c{2,}	1Ac	NOMATCH
+E	(a{0,1}A{2,}(([ab]{2,}[^a]?)[[:alpha:]]{1,2}|(\n){2,})|\n+)*$	ac 	3,3 -1,-1 -1,-1 -1,-1 -1,-1
+E	\\1|[ab]	a1Aaabc B1 b	ERR 6
+EN	\n{1,2}	a 1a\nA\nacA	4,5
+E	^[[:alpha:]]{1,2}	1 1\n aAaa\nb	NOMATCH
+E	^([ab]*(\\1[^b-c]\n[^a]*[ab]{1,2}|[ab]{1,2}\n{0,1}|.?[a-c]+)*)*	\nbAc\n	ERR 6
+E	^\n?.B{2,}[A-Z]{2}	A Bcac	NOMATCH
+E	[^b-c]$	aabaA	4,5
+EI	[a-c]((A{0,1})b.{2}(c[ab]+b{2,}|b{2,}[ab]B?|[ab]b+(\\1?\n{0,1}|.{1,2}|.{1,2}[^[:space:]]){1,2}[a-c]))*.?	b 1ABcBAAAB	ERR 6
+EN	^[a-c]?b{0,1}[ab]+	Ba\nAbc 	NOMATCH
+E	[A-Z]?c{0,1}	\n\n1c1b1	0,0
+E	a$	Acb1	NOMATCH
+E	.{2}(\\1(A*b|\\1c{2}){2,}\\1{2}\n{2,}|[^a]?)*	1	ERR 6
+E	^[^a][[:alpha:]]{2}	1 aB11b\naB  	NOMATCH
+E	[A-Z]	a\n\nb	NOMATCH
+EI	[[:alpha:]]+		NOMATCH
+EI	\n+[[:alpha:]]+	cc aaa1A 	NOMATCH
+EIN	[^b-c]{1,2}.{2}a{0,1}	b\nac	NOMATCH
+E	(b*){1,2}[^[:space:]]|[^a]{2,}[^[:space:]]c.	B1	0,1 0,0
+EI	[A-Z]	caaba BbA1BA	0,1
+E	^.\n(([a-c]?|B{1,2}\n[ab]{1,2})|A?.{0,1}(A|[^b-c]))|[^b-c]{2,}	 \nBc 	0,3 2,3 -1,-1 2,3
+E	A{2}[a-c]c{0,1}	b\n11ccb\nB111	NOMATCH
+E	b	cB11 1aca	NOMATCH
+EN	([[:alpha:]][a-c]|\n{0,1}[^[:space:]]{1,2}|B{2})[A-Z]{0,1}([[:alpha:]]{2})[^[:space:]]\n+|[^[:space:]]{2}c{1,2}.	 bAc	NOMATCH
+E	[a-c]+	bAaB	0,1
+EN	\\1{2}[^a]+[a-c]	cc1 	ERR 6
+E	a{2}|c{1,2}[a-c]{0,1}(bBB{1,2}|b[ab][A-Z].+)	 a \nBba\nc1	NOMATCH
+EN	\n{2,}$	aAaba11a1b1	NOMATCH
+E	^\n	 Ab1AB	NOMATCH
+EN	(a?)+[A-Z].$	\nA11cB1\naa1\n	5,7 5,5
+E	[ab]*|[ab]A*.{1,2}	1\ncB\n	0,0
+E	^[[:alpha:]]\n+a{2}	B\ncbb	NOMATCH
+EN	^[[:alpha:]]\n?$	1 Bc\n\na\na	6,7
+E	b[[:alpha:]]		NOMATCH
+E	[^b-c][^a]\n+$|[^[:space:]]{0,1}	\nA 	0,0
+E	BB	\n\n Aac	NOMATCH
+EI	^A\nb|[^[:space:]]{2,}(a([[:alpha:]]{2,}.{2,}([[:alpha:]]{2,}|c+|Ba{2,})){0,1})B*	ABAc bccc1 	0,3 2,3 -1,-1 -1,-1
+E	([^a].bA{2}[A-Z]{1,2}|[^a]\nca{0,1}|[^[:space:]]A[[:alpha:]]+){2,}	1	NOMATCH
+E	cAA.(A(\\1+[[:alpha:]]B{2,}|(.{2,}[A-Z]+b*)*){0,1}|(Ab{0,1}(a|.+[ab]?|b?[^[:space:]]+c{1,2}){2,}){2,}|(\n[[:alpha:]]{2}))	1AAcABccAb\n1	ERR 6
+EN	\n*[ab]	a	0,1
+EI	Ba+([a-c][A-Z][A-Z][^b-c](b\n{2,}c){1,2}|.{0,1}[a-c]{1,2}\n){0,1}	A aba\n\n	3,5 -1,-1 -1,-1
+E	[a-c]B{2}[^[:space:]]([[:alpha:]]B{1,2}|A[^b-c]([A-Z]|[^[:space:]]{0,1}[^b-c]+[ab])([ab]{2,})+\\1*)+b|[[:alpha:]]{2}Bc	1	ERR 6
+E	[[:alpha:]]{1,2}(.|[^b-c]B[A-Z]*A{2}(\\1{1,2})*|\n+)	1A c	ERR 6
+E	(([[:alpha:]]){0,1})((b{0,1}B{2})*([[:alpha:]][^b-c]|(AA*\nb+|[A-Z]B+[^b-c][^a]+|[a-c][A-Z][a-c]?(\n)+){1,2})*|B[^a]aB)	\n\n\n BA1 c	0,0 0,0 -1,-1 0,0 -1,-1 -1,-1 -1,-1 -1,-1
+E	.+|[^[:space:]]{2}	 BB c	0,5
+EI	[ab]A*	\n\nA 1   b A1	2,3
+EI	\nB*.([^[:space:]]|[ab]A*)A{2,}	\n\nc1BaA a\nB 	NOMATCH
+EIN	[A-Z]([^a][^[:space:]]([^b-c]*|.{1,2}[A-Z]){1,2})?([a-c][A-Z]\n|[^a]?[^b-c])\\1[a-c]\n?	Bbbb\n\n	NOMATCH
+EIN	a*|([^[:space:]]a(a?|\n\n{2,}|\n{1,2}.)[A-Z](\n{0,1}|[^b-c]|a{2,}\\1+[^a]+)+|b{2,}|(a{1,2}|[^b-c][A-Z]{2,}){1,2}a*)+	ccbBbAc	ERR 6
+EI	([^a]Bc?)\n[[:alpha:]]c	\ncccc	NOMATCH
+E	([a-c]((b)?|a?b[A-Z]{1,2}a+)[^[:space:]][^[:space:]]B{2}){0,1}	1	0,0 -1,-1 -1,-1 -1,-1
+EI	[[:alpha:]]$	b1aabBc	6,7
+EN	[A-Z]\n{2}	b1cAb11a\nAb	NOMATCH
+E	[A-Z]{1,2}[^a]B	A A b	NOMATCH
+EN	[^b-c]?	 	0,1
+E	^[^a]+$	b1	0,2
+EN	c[^[:space:]]A+	Bb\n1Ab	NOMATCH
+EI	^([^b-c]{2})[ab]{2,}	1Ac\na	NOMATCH
+E	(.?|[a-c]{2,}|[a-c]A.{2}c{1,2}){2}\n*(.|a?|\n?c)	1bb1	0,4 1,3 3,4
+E	..[A-Z]Acab+	1\nb	NOMATCH
+E	[ab]?	 BAc	0,0
+EN	.{1,2}[[:alpha:]]$	1\na	NOMATCH
+EI	^c(\\1*[ab]{1,2}|[[:alpha:]]){1,2}	Ba 	ERR 6
+EIN	\\1?	cb\nacBB1c\n1	ERR 6
+E	([a-c]{1,2}([ab]?[^[:space:]]B{0,1}b[^b-c]{1,2})([a-c]{0,1}|B[[:alpha:]]{2}))		NOMATCH
+E	^[a-c]{2}[A-Z]+B[^a]{2,}	 b\nac c	NOMATCH
+E	a{1,2}[^a]\n{1,2}	AA  c1\nBabB	NOMATCH
+EN	.{1,2}A	caBbA\nbAb	2,5
+E	\\1+	1A	ERR 6
+E	\na[ab][^[:space:]][^b-c].{0,1}	c b c1b\n	NOMATCH
+EIN	[a-c]{2}$|[^b-c]	cAB 	1,2
+EIN	((B+)*[a-c])([A-Z]{1,2}([A-Z]|(c[^b-c][^a]{1,2}|B{1,2}|B?a[ab]{2,}){1,2}abB*){2,}|[^b-c]{2,}\n[[:alpha:]].)?Bb{1,2}		NOMATCH
+EI	[ab]{0,1}[^a]+([^a]{0,1}|(([a-c]+[^b-c]){2}){0,1})(Aa{2,}([^[:space:]]?|b\\1{2}[^[:space:]]{0,1}))		NOMATCH
+EN	^([[:alpha:]]a{2,}|A{2}B{0,1}[[:alpha:]].+|B([A-Z]{2,}|b{0,1}[^[:space:]]{2})[ab])*[^a]{2,}.{1,2}	c BA	0,4 -1,-1 -1,-1
+E	A{2}$|(([^b-c]{0,1}|([[:alpha:]]{2,}c{2}|A[^[:space:]]{1,2}\n{0,1}|[^a])+BA?[^b-c])a)a	bAa1Ac b1b1\n	NOMATCH
+EI	a{2}c*$|[a-c][A-Z]a\\1{0,1}\n{0,1}[A-Z](c{0,1})	ab1\nac\n\na1a	ERR 6
+EIN	(B?[[:alpha:]]*)|[^b-c]((b\n[^a]{2,})[a-c]A{2})+[ab]{2,}A?	Abc\n	0,3 0,3 -1,-1 -1,-1
+EIN	[^b-c]{0,1}c{2}	a	NOMATCH
+EN	^[ab]{1,2}[A-Z]{1,2}	bbA\nBBA1\n a\n	0,3
+EN	c*	\nba1c	0,0
+EN	[a-c]A+c*|B{2,}[^[:space:]]a{1,2}		NOMATCH
+EIN	[^[:space:]]{1,2}.?	ccbaB\nbB1	0,3
+EN	([^[:space:]]+|[[:alpha:]]{0,1}[ab][ab]B?([ab]|c{0,1}(b?)([ab]|\n*A*)+){2}|Ac[ab]{2})B+(c+c{1,2}\\1b?)?	a B1	NOMATCH
+E	^[A-Z].(B{2})[^a]c{1,2}B	 AB	NOMATCH
+E	([^b-c]+a{1,2})|\n{2,}[ab][^b-c]{0,1}	c 	NOMATCH
+EN	[[:alpha:]]{2}|Ba{2}[[:alpha:]]{0,1}	B1aB1 	2,4
+EN	.	a b\n	0,1
+EN	.*		0,0
+EIN	c*[^[:space:]]*	a a	0,1
+E	[^b-c]cA?B?B{2}	Bc	NOMATCH
+E	([^a]{2,}(([^[:space:]]a[ab]|\n{2,}a{2,}[A-Z]{2,}){2,})[a-c]|[^b-c]c.{2,}c[A-Z]b.*)?[A-Z]{1,2}	B1  1aaB\n\nB\n	0,1 -1,-1 -1,-1 -1,-1
+EN	c(a{0,1}c|(([^a]b{0,1}|B{2}[^[:space:]]{1,2}b*){1,2}[a-c][ab]))[^a]c[^a][^[:space:]]?.+	\n\na A\nAacAAb	NOMATCH
+E	\n[^a]{1,2}	 1a	NOMATCH
+EI	[^b-c]{2,}$	ccB A 	3,6
+EN	a[A-Z](b[a-c]{0,1}b[^b-c]+[^b-c]\n{1,2}|([^b-c]{2}[A-Z]{2,}[ab]{1,2}){2,}[ab]B)c[A-Z]([^b-c]a{0,1}b{2,}|\n+)B+	 ab1c\n	NOMATCH
+E	[a-c]([^b-c].(\nA{2}|B{1,2}[^[:space:]])(([ab]?c*.{0,1})?|[A-Z]{2,}\nc|(a?B{2,})[a-c][^a])+)	\nAb1	NOMATCH
+EN	^[ab]{2}.{0,1}$	\n1\n	NOMATCH
+EI	[ab]{2,}|[[:alpha:]]\n	b1aac	2,4
+EN	B{0,1}	a  a1B Bb1B	0,0
+EN	c[^b-c]{1,2}B.{2,}	b  Bcc1bcB	NOMATCH
+EI	.?$	1aA	2,3
+E	A?c.|[ab]	BAA b\ncBB1	4,5
+EIN	A([ab]?)	 BbB1Ab \n11	5,7 6,7
+EI	a.[a-c]{2,}(A{2,}|[^b-c]b{1,2}|(([^[:space:]]c?(c+|a{0,1}c{1,2}b{0,1}|[a-c]\\1{0,1})?|[^[:space:]]A?){1,2}[a-c]){2}B+)	A\ncac \ncBb  	ERR 6
+E	B.(([ab]*c{0,1}|([^a]|B?bc*|[a-c])([A-Z]{0,1}|b{2,}A{1,2})*c[ab]{2}|(Bb)?B*)*){0,1}	 A	NOMATCH
+EI	B?[ab]	 1AbB	2,3
+EI	([A-Z]{1,2}){0,1}((b?[A-Z]?|A(b\n{0,1}B{1,2})B*[a-c])\n){2}[^[:space:]]		NOMATCH
+EIN	B{0,1}	ba1 A\n 	0,1
+EI	c{2}\n{2,}	a\n bb	NOMATCH
+E	[^[:space:]](B[^a]A\n{2,}(c|(\\1|a{2,}\n*){0,1}[a-c]{1,2}c)*){1,2}c([[:alpha:]]?|[[:alpha:]]+a*)+	BbAaBa\n 	ERR 6
+EIN	[^[:space:]]{0,1}	\nBcb11\naAa1	0,0
+E	A?	ca\nbc	0,0
+EIN	cc{1,2}(a{0,1}c([^a]){0,1})	 abcB	NOMATCH
+EIN	cc[a-c][^[:space:]][^[:space:]]b([A-Z]B[a-c])[a-c]{1,2}	b  AAABA a1A	NOMATCH
+E	[^[:space:]]{2,}B	\n\nBA\n\n	NOMATCH
+E	B?$	B	0,1
+EIN	[^a]	1B \nc\nbB	0,1
+EN	b{2,}	b	NOMATCH
+EN	^[^b-c]{2,}	Bb\nBc	NOMATCH
+E	^((\nA+(A{2}[^a]?)){0,1}[^b-c]*|([^b-c][^[:space:]]{0,1}){0,1})[^[:space:]][^[:space:]]\n\n?\\1{2}|[^b-c]{2}	11aBB\nba	0,2 -1,-1 -1,-1 -1,-1 -1,-1
+E	\n?|[^[:space:]]{2}	11  a1bBA\n	0,2
+E	A?\n{0,1}a{0,1}	\nb 	0,1
+E	[[:alpha:]]{0,1}b{0,1}A	A b1A c1AB	0,1
+EN	a	b\ncA  c	NOMATCH
+EIN	([a-c]{0,1}|(.[A-Z]B){2,}aA{2,})[a-c]{1,2}	bAcA	0,3 0,1 -1,-1
+EN	[^a]*(b[^a]a[^[:space:]][^b-c]{1,2}[ab]*)	b	NOMATCH
+E	[^[:space:]][ab]{1,2}	bcab\n \na Ac1	1,4
+E	[[:alpha:]]+[^b-c]?$		NOMATCH
+EI	\\1\n[A-Z][^[:space:]]	B1\nab\n	ERR 6
+EN	b{1,2}$	B1Bcb1B	NOMATCH
+E	([a-c][^[:space:]]([^[:space:]]{0,1}\n+|[ab]*[A-Z]|[^b-c]{2,}).|[[:alpha:]]{1,2}){0,1}b		NOMATCH
+E	cAB{2,}a{2,}	Abcc	NOMATCH
+E	[A-Z]{0,1}	bb\nc\n	0,0
+EIN	[[:alpha:]]{0,1}[^a][ab]{2,}[^b-c]	cba  ca \n\n1 	0,4
+EI	\n[ab]bB	1cc1B  Bb	NOMATCH
+E	B{2}		NOMATCH
+E	[[:alpha:]]?$|A+[A-Z]+c*	B1 A1 bcBb	9,10
+EN	[a-c]{2,}([^b-c]?(\n+([^[:space:]]?A*|B{0,1})bA*)?)b[A-Z]{2}	  \n1AAABbb	NOMATCH
+EN	[^[:space:]](.{1,2}[a-c]*)B[^a]{0,1}[^[:space:]]	\n bBc1Ba	3,8 4,6
+EIN	^[[:alpha:]]	AB	0,1
+EN	^[^[:space:]].[a-c]b+$		NOMATCH
+EI	a{2}	 1A a\nb	NOMATCH
+E	c*\\1?(\n*)	1\nbB\na1ccB	ERR 6
+E	[^b-c]	 \nbAc\n bb1	0,1
+EN	A[A-Z]aa[[:alpha:]]	aBbb b 	NOMATCH
+E	[A-Z]{2,}a	B	NOMATCH
+EIN	.	 \nc	0,1
+EI	\\1?[[:alpha:]]	AbABbAcBb \n	ERR 6
+EN	(bB{1,2}([a-c]{2,}[a-c]{2,})){1,2}[^b-c]+|[^[:space:]]{0,1}	a A \ncb 	0,1 -1,-1 -1,-1
+EN	^a{2,}A?	\nAcc1BbBb  	NOMATCH
+E	[A-Z]{0,1}[ab]*	a 1baB	0,1
+E	([a-c]*)	Accc\n\nBB1 	0,0 0,0
+E	c[ab][a-c][A-Z]{1,2}	cB1cB	NOMATCH
+	a[ab]a\\{0,1\\}$	aba1 a	NOMATCH
+	^c\\?\\(cc\\{2\\}\\)c\\(\\(a\\)\\{2\\}\\)\\{2,\\}$	ba11	NOMATCH
+	^[a-c]\\{2,\\}	cacaacbbc 1c	0,9
+	a\\(a.\\{1,2\\}b\\+\\|[ab].\\?\\|[^a]\\+b\\+\\)\\([^a][ab]\\{1,2\\}\\|c\\{1,2\\}[ab]*b\\?\\|b\\?[ab]*[^a]\\{2\\}\\)[^a]\\{0,1\\}	a c1cb11bacb	0,12 1,9 9,12
+	^.\\{2\\}a[a-c]\\(.\\{0,1\\}.*\\|b\\{0,1\\}\\|[a-c]\\{1,2\\}[a-c]b*\\)\\(b\\+.c\\{0,1\\}\\)c[ab]	ccb 1b1	NOMATCH
+	^.\\+	 acb cb ac	0,10
+	^[^a]\\{2\\}[a-c]\\+\\(b\\+\\|b\\+\\|[ab]\\{1,2\\}\\([^a].a\\{2,\\}\\)\\)\\{2\\}$	 caabc	NOMATCH
+	^[ab]\\{1,2\\}	cc baa	NOMATCH
+	c\\{2\\}$	b cc aa bc1 	NOMATCH
+	^[^a]\\{1,2\\}	 a a aacba1c	0,1
+	[ab][^a]\\?	1aaba   c  	1,2
+	[a-c][^a]\\([a-c]\\{2,\\}b\\{2\\}\\|a\\)\\(.c\\{2,\\}\\|.\\{1,2\\}\\|b*.\\{2,\\}b\\{0,1\\}\\)	1ccc	NOMATCH
+	.*b[ab]*	11b	0,3
+	[ab]$	ba1	NOMATCH
+	[ab]*		0,0
+	a\\{1,2\\}	1c1c1bc	NOMATCH
+	b[^a]	acca  a 	NOMATCH
+	b\\+[ab]\\{0,1\\}[^a]*$	1ac1c1b 1	6,9
+	[^a]\\{1,2\\}	ba aacbc1c	0,1
+	a\\?[ab]\\{2,\\}$	1aa 1  aa	7,9
+	[ab]\\([^a]\\{1,2\\}ba\\|a\\)\\{1,2\\}[^a]\\{2,\\}	ac	NOMATCH
+	abac\\{1,2\\}\\(\\([ab]a\\{0,1\\}.b*\\)c\\?[ab]\\)	 aabcabc11 	NOMATCH
+	c\\?a\\?\\(b\\([a-c]*\\)\\)\\{2,\\}	 a	NOMATCH
+	\\(b\\{1,2\\}c\\|a\\(b\\+\\|b[a-c]\\+\\|a.[ab]\\)*\\)\\(b\\?\\|a.[^a]b[ab]\\?\\)\\{0,1\\}a\\{0,1\\}		NOMATCH
+	[ab]b\\{0,1\\}	1aa	1,2
+	^.	1cac1 	0,1
+	ac\\{0,1\\}	cb a	3,4
+	\\(b\\|[a-c]\\)\\{0,1\\}[a-c]*	  1bc 1bb b	0,0 -1,-1
+	^a[a-c]\\{1,2\\}	1ca   b1cac	NOMATCH
+	[ab]\\{0,1\\}		0,0
+	c\\{0,1\\}[ab][^a]*	a1 aa a	0,3
+	[ab]\\([ab]\\+ab\\{1,2\\}\\)\\([ab]\\{2,\\}\\).	11a	NOMATCH
+	b\\+\\(c\\{1,2\\}\\).\\{2\\}	1 cba	NOMATCH
+	[a-c]	cba aa1c 1	0,1
+	.c\\{2,\\}	1cbaab	NOMATCH
+	[a-c]	111b1	3,4
+	.*	 b1abca b	0,9
+	aac[^a]\\?b\\{1,2\\}$	 ca1b	NOMATCH
+	^\\(\\(ac.[ab]\\{2\\}\\)\\)[^a]\\{0,1\\}	a1c acbb	NOMATCH
+	[^a]ca[ab]\\?		NOMATCH
+	[^a]\\{1,2\\}b	a	NOMATCH
+	[ab]\\(\\([^a]\\+b[^a]*\\)\\{0,1\\}a*[^a][^a]b[^a]\\)	b1c1bccc1bbb	0,12 1,12 1,8
+	b\\(\\(\\([^a]\\{2\\}\\|c\\|[^a]\\{0,1\\}c\\{1,2\\}[a-c]\\{1,2\\}\\)\\)*\\(\\(c*\\)\\{2,\\}[ab]a\\?b\\+\\|c\\{1,2\\}\\)\\{1,2\\}[^a]\\?\\)[a-c]\\+	a1ab1  	NOMATCH
+	^[ab]\\{2,\\}	 1	NOMATCH
+	[^a][^a]	cbcaaba	0,2
+	\\(.*[ab]\\([ab]*\\|\\(aa\\{1,2\\}[^a]\\{2,\\}\\|b\\|c\\)[ab]\\{0,1\\}\\)\\|\\(\\([a-c]\\{0,1\\}\\)\\)*c\\|[a-c]\\)\\+	1bac  a	0,7 0,7 7,7 -1,-1 -1,-1 -1,-1
+	[ab]\\(b\\([a-c]\\{1,2\\}\\|[a-c]\\?\\|[^a]\\)*c[^a][ab]\\)\\{1,2\\}	cc	NOMATCH
+	[a-c]\\?	1	0,0
+	[ab][^a]\\{0,1\\}	abbcac a	0,2
+	\\([ab]\\{1,2\\}\\|.\\{1,2\\}\\)		NOMATCH
+	c\\?	1aa1b	0,0
+	\\([ab]\\+[ab]\\?\\|c\\{0,1\\}\\|[^a]*\\)\\([ab]\\{0,1\\}.[a-c]\\)a\\{2,\\}.	 c 	NOMATCH
+	^\\(.\\)\\{2\\}	c b 1	0,2 1,2
+	b[^a]\\(.[a-c]\\{2\\}[^a]\\+\\|ca\\{2\\}[^a]\\{2\\}\\)[^a]\\?	c1bbb	NOMATCH
+	[ab]	a1   1aab	0,1
+	[a-c][a-c]\\?$	1  c ab	5,7
+	[ab]a\\{2,\\}cca\\{2\\}$	 bbbc ca1 b1	NOMATCH
+	\\(\\(a\\?\\|[^a]*\\|b*[^a]\\{1,2\\}.\\)*\\([ab]\\+\\)\\?c\\?\\|.\\{2\\}\\|a\\)\\{0,1\\}	a 1 cba 1 	0,10 0,10 7,10 -1,-1
+	[ab]\\{1,2\\}a\\{1,2\\}		NOMATCH
+	[^a][a-c]a[^a]\\+[^a]\\?	  	NOMATCH
+	a\\{0,1\\}	bcaa ababa	0,0
+	c\\{2,\\}[^a]\\{0,1\\}	11bc1b cbc	NOMATCH
+	[^a][ab]	  cc	NOMATCH
+	..\\{2\\}$	ba1	0,3
+	^c\\{1,2\\}a\\{0,1\\}$	 bbcaaaa   c	NOMATCH
+	.\\{1,2\\}.\\?[ab]\\{2\\}	cb ac cc	NOMATCH
+	.\\?b\\{1,2\\}[ab]	  c c ab1	NOMATCH
+	^\\(b*ab*\\|[ab]*\\)[^a].a*\\(\\(c\\|a\\{1,2\\}\\)\\([ab]b\\(.\\?b\\?\\|.*\\)*\\([^a][a-c]b[ab]\\?\\)\\?\\)\\)\\{2\\}	   c	NOMATCH
+	[ab]b	 baa1a1ba	NOMATCH
+	a	 cab	2,3
+	^c\\{1,2\\}a*[a-c]\\?	 ba ba 1 1b	NOMATCH
+	^\\([ab]\\(c[a-c]\\|\\([ab]c\\{2\\}[ab]a\\{1,2\\}[ab]*\\|b[ab]\\+\\)\\+\\(c\\{1,2\\}[ab].\\|b\\{2\\}\\)[a-c].[^a][ab]b\\{2\\}\\)\\+\\)	 111bbbc1ca	NOMATCH
+	b\\{2\\}[a-c]\\{0,1\\}[ab]	b	NOMATCH
+	b\\{1,2\\}	abababb 1bb	1,2
+	a\\(b[ab]\\{0,1\\}bb*\\)\\([a-c]ac\\{1,2\\}\\|[^a]\\|b\\{1,2\\}\\).\\?\\(.\\)\\{2,\\}$	 	NOMATCH
+	a*	a 1caa1b11	0,1
+	[ab]$	a	0,1
+	[^a]\\(c\\{0,1\\}[ab]a\\{0,1\\}\\|\\(b\\?\\|a*b[ab]\\{0,1\\}\\|[a-c]\\?\\)[ab][a-c]\\{0,1\\}c\\)[a-c]*[ab].\\?	c 	NOMATCH
+	^b\\{0,1\\}[a-c][^a]$	1 ca1 c 1a 	NOMATCH
+	[a-c]*c.[^a]$	 b11	NOMATCH
+	bb[ab]		NOMATCH
+	a$	caa1ccaaa	8,9
+	[ab]\\{2\\}[ab]\\?[a-c][a-c]\\{1,2\\}	aba1cb c1	NOMATCH
+	[^a].[^a]	cb11 ccacc	0,3
+	b\\{2\\}$	b1	NOMATCH
+	c\\?	c 1bba	0,1
+	a\\{0,1\\}	ab	0,1
+	[a-c]\\{2,\\}[ab]	1a111acca	5,9
+	\\([^a]\\)\\{0,1\\}		0,0 -1,-1
+	^[ab][a-c]	a  bab1	NOMATCH
+	[^a]\\+c.\\{2,\\}	c1aac 	NOMATCH
+	\\(b\\|c\\{2,\\}\\|c\\+b\\([a-c]*c*a\\+\\)*..c\\{0,1\\}\\)a\\{0,1\\}	 ca cb aa	4,9 4,8 -1,-1
+	.[ab][a-c][ab]\\{2\\}$	c1bb b1a	NOMATCH
+	[ab]c$	11c a ab 11	NOMATCH
+	\\(\\(\\([^a]\\(c\\)\\|b[^a]\\+\\)\\+.\\{2,\\}b\\{2\\}\\)*\\|[ab]\\{2,\\}\\|b\\?\\)\\?[ab]\\{0,1\\}	cc baaabb	0,9 0,9 0,9 0,2 1,2
+	.	 c 	0,1
+	c.	 b1c	NOMATCH
+	^[a-c]\\{2,\\}c[^a][^a]*$	ab 1cc   111	NOMATCH
+	[ab][^a]a\\{0,1\\}c\\+[^a]	ba1ac	NOMATCH
+	[a-c]\\(ca\\{2,\\}\\|.*bb\\|[^a]\\{0,1\\}a\\+[a-c]*\\)a.b\\{2,\\}	1bcab 	NOMATCH
+	c\\{0,1\\}\\([ab]..[ab]\\(b\\{1,2\\}\\|.\\+c\\{2,\\}a.\\)\\?[ab]\\)[ab]\\+[ab]\\{2\\}	 a11  acb	NOMATCH
+	b\\{0,1\\}[^a]\\{1,2\\}[^a][^a]*	aab 	2,4
+	\\(a\\{2,\\}[^a]b\\)b[ab]c$	b1c ba1a 1  	NOMATCH
+	[a-c]\\{0,1\\}	ba 11  ba  	0,1
+	b\\(a\\+\\)\\{2,\\}$		NOMATCH
+	[^a]..[^a]\\(c[a-c]\\+[ab]\\{1,2\\}\\|[^a]\\{2,\\}.\\{2\\}b\\+\\|.\\{2,\\}a\\{2,\\}\\)\\{1,2\\}c	c1ab	NOMATCH
+	^[ab]\\{2\\}[ab]\\?.\\([ab]\\{2\\}b\\{0,1\\}[a-c]\\)	acbaa	NOMATCH
+	\\([a-c]b*\\|[ab]a[ab]\\{1,2\\}[^a]a\\{2,\\}\\|[^a]c.\\([ab]\\{1,2\\}\\)\\).[ab]..\\{0,1\\}	 1b 1b 	NOMATCH
+	^.*	a11bcab	0,7
+	[^a]*		0,0
+	c\\{1,2\\}		NOMATCH
+	[^a]\\+	  cc 	0,5
+	[^a][^a]\\(a\\?\\|[ab]\\|[ab]*\\)[ab]\\{0,1\\}	bb 1bbc b  	0,2 2,2
+	[a-c]\\{2\\}	1	NOMATCH
+	^[ab]\\(a\\+\\(b*\\|[ab]\\{2,\\}[ab]*[ab]\\?\\|a\\{1,2\\}\\)b*\\)[ab]	1a1cbbbcb	NOMATCH
+	[a-c]\\?[ab]\\{0,1\\}		0,0
+	ab[^a]		NOMATCH
+	bb\\{0,1\\}\\([a-c]\\([a-c]\\{2,\\}\\)*b.\\{0,1\\}\\)[a-c]c	a ba 1c	NOMATCH
+	\\(c\\)\\{0,1\\}$	 	1,1 -1,-1
+	[ab]\\(b\\+\\|[^a]\\{0,1\\}\\|c\\{2,\\}c\\)bc\\{1,2\\}	abbc1	0,4 1,2
+	[ab]*	a11 a1c	0,1
+	a\\{2\\}	 1   1aa	6,8
+	[ab][^a]\\{1,2\\}$	11b	NOMATCH
+	[^a]\\{2\\}\\([ab]\\{2,\\}\\)$		NOMATCH
+	b*	1cb  bbbb1 	0,0
+	^c*$	11c1bc bbbcb	NOMATCH
+	b\\{2,\\}	 c	NOMATCH
+	a\\{0,1\\}[a-c]	b1a1bc1cba	0,1
+	\\(\\(a\\|[^a][ab]c*\\|[^a]\\)[a-c]\\([^a]\\)\\{0,1\\}[a-c]\\{2\\}\\)\\+\\(\\(.\\?[ab][a-c]c*\\)\\{2\\}\\)\\{0,1\\}	ca	NOMATCH
+	[ab]\\{0,1\\}	a  1a ca 	0,1
+	\\([a-c]\\+\\|[a-c]\\{0,1\\}[ab]a\\(a*ac\\|[a-c]\\{1,2\\}b\\)\\?[ab]\\)\\{0,1\\}	  b a	0,0 -1,-1 -1,-1
+	\\(.\\([a-c][ab]\\{2,\\}\\|[^a]\\{0,1\\}[a-c]c\\?\\)[a-c]\\{1,2\\}\\)[^a]\\{2,\\}[a-c]c$	1 	NOMATCH
+	[a-c]\\{2,\\}$	cabccbc ca 	NOMATCH
+	.cb	a1cc1cbba	4,7
+	[^a]a[a-c]\\{0,1\\}	 cc ab1 	3,6
+	[a-c]\\{1,2\\}a	 	NOMATCH
+	c	c a ba1 cc	0,1
+	c\\{0,1\\}[ab]c\\{2,\\}[^a]	 a	NOMATCH
+	[a-c]	ba	0,1
+	ab\\{1,2\\}	b1	NOMATCH
+	.\\+		NOMATCH
+	[a-c]\\?\\(\\(c\\)\\+\\([^a]\\(b\\{1,2\\}[^a]\\|a\\)\\)\\{2,\\}\\)b\\{1,2\\}.*	c	NOMATCH
+	a\\?\\([a-c]\\{1,2\\}c\\+\\)[a-c]\\{2,\\}	ccbc1cba	0,4 0,2
+	[^a]\\{1,2\\}c	aa1c abbc	2,4
+	^[a-c]\\{2\\}	ccab	0,2
+	\\(\\([a-c]\\(bb*b\\{2\\}\\|c\\)*\\|[^a]\\(\\(b\\{1,2\\}[^a]\\?b*\\|c\\?aa\\{2,\\}\\)*[a-c]\\)*\\|\\([ab]\\+.\\)[a-c]\\{2,\\}\\)\\)\\{0,1\\}	1b 1cbb1c c	0,2 0,2 0,2 -1,-1 1,2 -1,-1 -1,-1
+	\\(c[a-c]\\+\\([ab]\\{2\\}\\|b*\\)\\+c\\)\\{0,1\\}	 c  cab 	0,0 -1,-1 -1,-1
+	\\(\\(b*[a-c]\\(.\\?b.*\\(.\\|a\\?[ab]\\?\\)\\{2,\\}\\|\\([^a]b\\+\\|.*b\\)\\{0,1\\}bab\\?\\)\\)\\(.\\?\\(ac.\\{2,\\}\\)*[a-c]\\)\\{2\\}\\)	 a1ac	NOMATCH
+	a[ab]\\{2,\\}b\\{1,2\\}$	cb c bc1abc1	NOMATCH
+	^\\(c[ab]\\)\\{2\\}	ac  1ba	NOMATCH
+	a[a-c][a-c]\\([^a]\\{2,\\}\\([a-c]\\{1,2\\}\\|.[a-c]\\+\\|a\\)\\)\\{2,\\}		NOMATCH
+	a[ab]b\\{2\\}	1  1ac11ab1 	NOMATCH
+	[ab]		NOMATCH
+	\\([a-c]*[^a]\\{1,2\\}\\|c\\+\\|[a-c]\\?[^a]cb\\{1,2\\}\\)a\\{0,1\\}\\([^a]\\{1,2\\}\\(.\\?\\|[ab]bc\\{1,2\\}\\)\\{1,2\\}a\\{0,1\\}\\)\\{2\\}	 c a1ca	0,7 0,2 5,7 7,7
+	[a-c]\\{0,1\\}[ab]\\{2\\}c$	  1c 1c  	NOMATCH
+	[^a]\\{2,\\}[ab]\\?		NOMATCH
+	[^a]\\?	a1b 	0,0
+	^\\(c\\+ba\\{2\\}[a-c]\\|.\\{1,2\\}[ab]\\{0,1\\}[ab]\\{1,2\\}\\)\\{2,\\}	bb baab1ac 	0,9 7,9
+	b[a-c]c$	b1a1a 1aab	NOMATCH
+	^a$		NOMATCH
+	b\\+\\(b\\([^a]\\+[a-c][a-c]\\|.*b\\+[^a].\\+\\)c\\{1,2\\}\\|\\(b\\+[^a].\\{2\\}\\)\\+\\)b		NOMATCH
+	^\\([^a][a-c][a-c]\\{1,2\\}[ab]\\{1,2\\}\\)[ab]	11c  c 	NOMATCH
+	[a-c]b\\{0,1\\}	1b ccbab	1,2
+	b\\{2,\\}\\([^a].[ab]c*\\([^a].[^a]\\+\\|[ab]\\{2,\\}\\)\\(bc\\)\\+\\)\\(b[ab][^a]\\{2,\\}\\|[a-c]\\{2\\}\\|b\\)\\?	a1b cb	NOMATCH
+	[^a]\\{0,1\\}	b1c1b	0,1
+	.[a-c][^a]\\([ab]*[^a]\\{2,\\}\\)\\(.\\)[ab]b\\{2,\\}	  bb1	NOMATCH
+	^[a-c]\\{0,1\\}	 bac1ba	0,0
+	\\(.\\{2\\}\\|abb\\{0,1\\}.\\{2\\}\\)\\?\\(.*\\|cb\\(c\\?[ab]\\+\\)\\(\\([^a]\\{0,1\\}\\|[a-c]\\?\\|a\\{2\\}\\)\\{2,\\}\\)\\+[^a]\\)*c\\([^a]\\{2\\}\\).\\+	111ba1 	NOMATCH
+	^[ab][ab]\\{2,\\}	bcab	NOMATCH
+	\\(\\(a[^a]\\{2,\\}c\\+\\|[a-c]\\).c.\\?\\|b\\)\\{2\\}	c1ccc	NOMATCH
+	^[ab]b\\{2,\\}\\(\\(b\\{0,1\\}\\|c\\{2\\}\\)\\{0,1\\}b.\\|[a-c][ab]bc[^a][^a]\\{0,1\\}\\(a\\+\\)\\+\\)\\{2\\}	1b1 a  ca aa	NOMATCH
+	^ba\\?$	c1b1 1a	NOMATCH
+	^\\(c\\([a-c]\\{2\\}\\)[ab]\\{2\\}\\(\\(\\([^a]\\+[ab]\\{2,\\}\\)\\+[^a]\\)\\{1,2\\}.b*[a-c]\\)\\{2\\}\\|c\\+\\)\\{1,2\\}[^a]c\\?b\\?	b aabc1	NOMATCH
+	b\\+[^a]c\\{2\\}	ba1c	NOMATCH
+	a\\{2,\\}b\\{2\\}		NOMATCH
+	.[^a]\\{0,1\\}[ab]\\{1,2\\}	aaca1	0,2
+	[^a]\\{2,\\}	b  1	0,4
+	\\(\\(cc\\|b\\{1,2\\}\\|a\\)[ab].\\([a-c]\\|[^a]\\{2,\\}\\)\\?\\)b\\{2,\\}.[a-c]\\+	ca	NOMATCH
+	.\\+	cb	0,2
+	^[ab]a.\\{2,\\}c\\?	 ccccbba ac1	NOMATCH
+	\\([^a]\\{1,2\\}\\|[^a]\\|[ab]\\{0,1\\}[^a]b\\+\\)ccc\\{0,1\\}	 a 1ba	NOMATCH
+	[^a]\\?	aaa	0,0
+	\\([^a]\\|\\(b[a-c]\\|c[a-c]a\\{0,1\\}\\|.[ab]\\(.\\+b[a-c]\\{1,2\\}\\|c\\?c[ab]*\\)\\)*\\)\\{1,2\\}[ab]\\{0,1\\}a\\+	bbbbc	NOMATCH
+	.\\?	aa 1	0,1
+	[a-c][a-c]\\?	cccb1aa	0,2
+	^[a-c][a-c]\\{0,1\\}	1	NOMATCH
+	[ab]c\\+\\([ab]\\{1,2\\}a[^a]\\{2\\}\\(b\\)a\\|\\([ab]*\\)\\([a-c]\\{1,2\\}\\)[a-c].[a-c]\\{0,1\\}b*\\)	abcb c	NOMATCH
+	a*	 ba 	0,0
+	\\(\\([a-c]\\?\\).[a-c]c\\(\\(ac\\)\\{2\\}.\\{0,1\\}[ab]\\|.\\?\\(\\([ab]b\\|b\\?a\\|[ab]\\{0,1\\}b\\{2\\}\\)\\|a\\+\\)\\{1,2\\}[^a]*\\)\\{2\\}[ab]\\?\\)	1b bcc1 bbb	NOMATCH
+	a	 1cb1a	5,6
+	[^a][^a]$	1 cc	2,4
+	[ab]a\\+$	c	NOMATCH
+	[a-c]a\\([^a]\\{2,\\}.\\|.\\{0,1\\}\\|\\(.\\{2,\\}b\\|[ab]\\{1,2\\}.\\{2,\\}\\)\\{1,2\\}[^a]\\)\\+	 1b  1	NOMATCH
+	[ab]*\\(\\([ab]\\{1,2\\}\\|[ab]\\{0,1\\}\\|[ab]\\?\\(a\\{2,\\}b\\+a*\\)\\+\\)\\([^a][ab]\\|\\(cc\\)\\{1,2\\}.[a-c]\\{0,1\\}\\)*[a-c]*b\\)	a  aa ac11	NOMATCH
+	\\(\\(a\\)[^a]\\{1,2\\}\\)\\(b\\|b\\?\\)\\([a-c]\\{2,\\}[a-c]*\\|\\(a\\{2\\}c\\?c\\{2\\}\\)c.\\)*	b aca 11a	2,4 2,4 2,3 4,4 -1,-1 -1,-1
+	^b\\(c\\)*$	b1babac	NOMATCH
+	^\\([^a][^a]\\?cb\\(c\\+\\)a\\(\\(c\\{0,1\\}\\)\\{2,\\}\\)\\|b\\{0,1\\}..[a-c].\\{0,1\\}\\|b\\{1,2\\}\\)[a-c]*.	bc abaa	0,7 0,5 -1,-1 -1,-1 -1,-1
+	.c\\{0,1\\}a\\{2,\\}	c  bb	NOMATCH
+	.[a-c][^a].\\([^a]\\{2,\\}[a-c]a\\+\\)\\?		NOMATCH
+	[ab]\\{1,2\\}	 a 11bba	1,2
+	\\(c\\?.\\{0,1\\}\\)	 ccc 1 	0,1 0,1
+	.*\\([^a]\\{1,2\\}\\)\\{1,2\\}a$	a	NOMATCH
+	a\\+$	 bcb	NOMATCH
+	[a-c]	acabbab	0,1
+	[ab]	 bb cb1c  a	1,2
+	b\\+[^a]\\+$	1aacaabcb	6,9
+	c\\(\\([a-c]a\\{1,2\\}\\)\\{1,2\\}\\|b.\\{2,\\}[a-c][a-c]*\\|a\\{1,2\\}[^a][^a][a-c]\\+\\)[a-c]*.\\{1,2\\}\\([^a]\\{2\\}\\|[ab]\\)\\?	a cca	NOMATCH
+	b\\?	aa1ac	0,0
+	^\\(.\\)*[a-c][a-c]\\{2,\\}b[a-c]\\+	bbcb   	NOMATCH
+	[a-c]a*\\(c\\{1,2\\}\\(a\\{0,1\\}\\|[a-c][a-c]\\{2\\}c\\?\\(.\\?.b\\|[ab]\\{0,1\\}\\)*\\)\\([ab]\\{2,\\}\\|[ab]c*a\\{1,2\\}\\)[^a]\\)\\{2,\\}$	bb1a1b1bc	NOMATCH
+	[ab]\\?	1bc1b	0,0
+	\\(.*a\\)\\{2\\}[ab]\\{2\\}	c a1a	NOMATCH
+	[^a]	 1acac	0,1
+	c*	1ba	0,0
+	[ab][a-c]\\([^a]\\{2\\}\\)\\+c\\{2,\\}\\([^a]\\{2,\\}[^a]\\+\\)\\{0,1\\}	abcaabbb 1 1	NOMATCH
+	^.	a	0,1
+	^\\(c[ab]\\(b\\{1,2\\}\\)\\)b\\{1,2\\}$	 c  1  1a	NOMATCH
+	\\([^b-c]\\+\\|Ba\\{0,1\\}b\\+\\)\\{0,1\\}[[:alpha:]]*	   B 	0,5 0,5
+IN	\\([ab]\\{1,2\\}[^a]\\{1,2\\}\\(A*\n\\|[^[:space:]][[:alpha:]]*\\([[:alpha:]]\\{2\\}b\\)\\)AAB\\{0,1\\}\\|[^b-c]\\)\\{0,1\\}$	 a1	2,3 2,3 -1,-1 -1,-1
+	\n\\?	aA	0,0
+	\\(Bc\\(b\\{0,1\\}\\)B\\{1,2\\}\\|a\\(A\\?\\|.\\+A\\{0,1\\}[ab]\\{0,1\\}\\|b\\{2\\}\\).\\{2\\}\\|b\\)\\?A*$	c cBBAB	7,7 -1,-1 -1,-1 -1,-1
+	[^a]	aBA1bb bb11	1,2
+I	[^[:space:]][^[:space:]]\\+	\nAb1acBb	1,8
+N	\\(\\(a\\?\\)\\{0,1\\}\\|B\\(\\1\\+\\)\\+\\([ab]\\?a.\\{0,1\\}\\)\\{1,2\\}\\)[A-Z]\\{2\\}\\(.[^b-c]a\\|[ab]\\{2\\}\\|[a-c]\\{0,1\\}\\)\\+		ERR 6
+	a\\+B\\?	 Aca	3,4
+	B*b\\+$	aBa11 bcB	NOMATCH
+	a\\{0,1\\}[^a]*	aB1	0,3
+N	^[A-Z]\\{2\\}	A \naAB	NOMATCH
+	\\(\\([ab]*\\|\\(\n[A-Z]\\|.a[^b-c]\\?\\)\\|\\1[ab]\\{2\\}\\)bb\\([^[:space:]]\\{2\\}.\\?\\)\\{0,1\\}\\)\\{1,2\\}A	BaBa\nba1 b	ERR 6
+IN	^\n[^a]\\+\n	\nB1B\nc\n	0,5
+	[ab]	\nAb B	2,3
+	a\\{1,2\\}	bb1b b	NOMATCH
+I	\\(A*\\)\\{1,2\\}\\([^a]\\{2\\}B\\{0,1\\}\\)\\([^a]\\{0,1\\}[a-c]\n\\)A\\+	 b	NOMATCH
+I	b\\{0,1\\}[^[:space:]]\\{1,2\\}	1	0,1
+I	.\\1[ab]A\\{0,1\\}a\\{0,1\\}		ERR 6
+	c	1bbbBc  c	5,6
+	[^[:space:]]\\(b*\\([a-c]\\{1,2\\}ba\\+\\|B\\{2\\}b\\{2\\}\\|A\\+[ab]\\)\\?.c\\{0,1\\}\\|\\([a-c]\\{2\\}\\)\\{2,\\}B*\\)c\\+	 B cb	1,4 2,3 -1,-1 -1,-1
+	a	B1\naaAA	3,4
+N	[^[:space:]]\\?$	cbA	2,3
+	\n\\{0,1\\}\n\\?	\na1\n1A1c1a\n	0,1
+N	\\(b\\([[:alpha:]]\\)[^b-c]\\|[^b-c]A[[:alpha:]][[:alpha:]]\\)$	BAa BBB a1a1	NOMATCH
+N	\\1\\(\\([^b-c]\\+[[:alpha:]]b\\{1,2\\}\\)a\\{2\\}[^b-c]\\{1,2\\}\\)\\(A\n\\?\\)\\{0,1\\}\\(c*[a-c]\\|[^b-c]c\\{2\\}a\\?\\)	b1\nAa\nb \n1	ERR 6
+	\\([[:alpha:]]*\\|a[A-Z]\\+A\\{1,2\\}c\\|\\(\\(a\\)\\{0,1\\}\\|c\\{2\\}\\(c\\?\\|a\\{1,2\\}\\)\\+\\1*\\)B\\{0,1\\}c\\{2,\\}\\)\\{0,1\\}.\\+	  	ERR 6
+	A\\{2,\\}	c	NOMATCH
+I	^bb\\(B\\)*	a	NOMATCH
+N	\n*[ab]	ccA1AAcb	7,8
+	[[:alpha:]].\\{2\\}	1aabBA 	1,4
+IN	[^b-c].\\{0,1\\}[^b-c]\\{1,2\\}	11c	0,2
+I	[^a]\\+	aAb1	2,4
+N	c*	A	0,0
+I	^[[:alpha:]]		NOMATCH
+I	[^b-c]\\([^b-c]\\{1,2\\}\\)[^[:space:]]\\(b[^a]c*\\)\\{2,\\}	AbB	NOMATCH
+N	..\\(\\(B\\1\\)*[^a]\\|\\(A*\\(b\\{0,1\\}a\\{1,2\\}\\)\\|\\(a\\?[^b-c]*[A-Z]*\\)\\{2\\}.\\{1,2\\}[a-c]\\)*[ab]\\?\\)[A-Z]\\?	Bbcbba 1bB\n	ERR 6
+	A\\{2,\\}[^[:space:]][a-c][^b-c]		NOMATCH
+I	^[[:alpha:]]\\?\\(\n\\+[[:alpha:]][[:alpha:]]\\?\\)\\?$	  a 1b   \nA	NOMATCH
+	^[A-Z]\\{2,\\}	 \n1	NOMATCH
+IN	[A-Z]\\([ab]\\{2,\\}[A-Z]\\?\\|[A-Z]\\(ba*\\)*\\|b\\+\\)\\([^a]*\\|[^[:space:]]A\\{1,2\\}[[:alpha:]]Bb\\{2,\\}\\)\\{0,1\\}	\n1cBB a \n	2,6 3,5 -1,-1 5,6
+	\\(\\([A-Z]\\|[ab]\\{2\\}\\)*\\)a\\(\n*[A-Z]\\)\\+[[:alpha:]]\\{0,1\\}\\([ab]\\)\\?	Bbb\n1\n\nBbB	NOMATCH
+I	A\\{2\\}	ba\n1	NOMATCH
+	\n\\+	Bc	NOMATCH
+N	[a-c][A-Z]\\+b[^b-c]b.\\(c\\+[ab]\\{2,\\}a\\{2,\\}\\)	abbB	NOMATCH
+I	\\(\\(A\\{2,\\}\\|[A-Z]\\{0,1\\}A\\?\\)B.[ab]\\{2,\\}[^[:space:]]cB[^b-c]\n*[A-Z]\\)\\+$	Ba BBB 	NOMATCH
+	b\\{1,2\\}[a-c]\\+[ab]	\nAcBb 1A1 bA	NOMATCH
+	a[[:alpha:]]\\?	 1 A\nABbaaB	8,10
+IN	\\(\\([a-c][ab]\\+\\|[A-Z]\\?\\)\\{2,\\}B\\{0,1\\}\\)c[^a]*a	 B1 c\n\ncaA	7,9 7,7 7,7
+	^.*$	B	0,1
+	bbac[ab]$	Aaab	NOMATCH
+	[ab]\\?	\n1	0,0
+	[^a]\\{0,1\\}$	\nbcaAAb1c	8,9
+I	\n\\{2,\\}	b\nAacAcbcB	NOMATCH
+N	B\\{0,1\\}	\nBa	0,0
+	\\(\\(.\\{2,\\}[^a]\\([a-c]\\{2\\}\\([^[:space:]]\\{0,1\\}\\)\\{1,2\\}\\|[^b-c]\\{0,1\\}\\)\\{2\\}\\)\\{2\\}\\)\\{2\\}	 11acBc11 	NOMATCH
+	B[A-Z]\\+[^[:space:]]\\?$	1bbB1\n Bb	NOMATCH
+	[a-c]*[^a]\\?B	bAB\n	0,3
+	[a-c]\\{2,\\}$	11\nca	3,5
+I	B\\{0,1\\}\\(\\([[:alpha:]][^[:space:]]*\\|c[^b-c]ccB\\{1,2\\}\\)\\{0,1\\}\\)\\+\nA[^[:space:]]b.\\{2\\}$	BcB	NOMATCH
+I	c[^b-c]\\{2,\\}\\(b\\{0,1\\}\\|b\\?\\)\\?		NOMATCH
+	^[ab][[:alpha:]]\\([^a]\\{2,\\}\\|\\(a\\+[^b-c]\\+\\)*ba\\{2,\\}[^a]\\+\\|[^b-c]\\+\\)\\+	1 \nc	NOMATCH
+	.\\{1,2\\}	Aa	0,2
+I	[A-Z]\\+[[:alpha:]]\\{2,\\}	BAaAccc 	0,7
+I	\n[^b-c]\\{1,2\\}	\nA 1	0,3
+I	[^b-c]\\+	1\n a\n c c	0,6
+I	A\\+	1 aBa c B1	2,3
+IN	B[^b-c]	B1	0,2
+I	[^[:space:]]\\{2,\\}$	\nBaBB1ca11	1,10
+	\\([a-c]\\?\\|b[A-Z]A\\?\\|[^a][^a]\\?.B\\?\\)		0,0 0,0
+	[A-Z]*	A	0,1
+	.[^a]\n\\([a-c]\\{2\\}\\)[ab]\\{1,2\\}	A1	NOMATCH
+I	[a-c]\\?a\\{2\\}	Bb	NOMATCH
+IN	\\(\\(c*\\(B\\{1,2\\}\\|\\1B*\\1\n\\{2,\\}\\1\\?\\|\n*[ab]A\\{1,2\\}[ab]\\)*\\)\\{2\\}\\|b*[[:alpha:]]\\|[a-c]\\+\\)A\\{0,1\\}Aa	c11	ERR 6
+	\\1$	A1	ERR 6
+I	[^[:space:]]*a	   AA\naBA\n\n	3,5
+IN	[[:alpha:]]\\+[[:alpha:]]\\+	BbA	0,3
+	[a-c]\\{2,\\}b\\(\\(B[[:alpha:]]\n\\|\\([ab]\\|[^a].\\{0,1\\}\\|a\\{1,2\\}A\\{1,2\\}\\)\\1[A-Z]\\{2\\}\\)\\{0,1\\}\\)	 cBcac\na1a\n	ERR 6
+N	[^a]	1cABa1Bb11	0,1
+IN	[^a]\\{2,\\}$	1cbB 	0,5
+	[A-Z][^a]\\([[:alpha:]]\\?\\1\\(c\\?\\|[^b-c]\\{2\\}[^[:space:]]\\)\\|[ab]\\{1,2\\}\\)\\([a-c]\\+\\|c\\{1,2\\}[^a][a-c]B\\{0,1\\}\\)	1 Bb	ERR 6
+	\\(b\\{1,2\\}b\\{0,1\\}A\\{2\\}\\)A*aA\\{2,\\}	cb\n\ncc1	NOMATCH
+	[^a]\\?c[^b-c]\\+	\nbb c\n bacb	3,7
+	A\\{1,2\\}\\([[:alpha:]]\\+.\\{2\\}\\|[A-Z]\\{0,1\\}A*\\)a\\{1,2\\}	1a1Aa 1b	3,5 4,4
+N	b\\{0,1\\}	a\nb\nb	0,0
+I	[^a]b\\(\n\\?c\\|a\\{1,2\\}\\|c\\{0,1\\}\\)[a-c]*	1a	NOMATCH
+	cc\\{1,2\\}A\\+	bB1	NOMATCH
+	B\\+a\\{2,\\}a\\?	 b\nAA\nc	NOMATCH
+I	[A-Z]A[^a]\\+		NOMATCH
+	\n	 aA\nB 1BA b1	3,4
+IN	[A-Z]\\([a-c]\\{1,2\\}A*\\|[[:alpha:]]\\{1,2\\}\\([^[:space:]][[:alpha:]]aab[^a]\\|B.a\\{2\\}\\)*A\n\\|[ab]\\{0,1\\}[A-Z]\\{1,2\\}\\)\\{2\\}	1	NOMATCH
+	B\\{2,\\}$	\n1Aa\ncc 1	NOMATCH
+I	\\(A\\{2\\}[^b-c]b[[:alpha:]][A-Z]\\{1,2\\}\\|[[:alpha:]]\\{0,1\\}\\)\\{0,1\\}b[[:alpha:]]		NOMATCH
+I	\n[^[:space:]][^b-c]	 baa A\nA1	6,9
+	\\([a-c]a\\(.\\{0,1\\}.\\{2\\}\\|B*[ab]\\)\\{2\\}[a-c]\\{0,1\\}[ab]\\{2,\\}\\)[[:alpha:]]\\{0,1\\}[[:alpha:]]\\+\\(\\([ab]\\?\\)a\\)\\+$	\n 	NOMATCH
+	A	a cAAa	3,4
+	\n\\{1,2\\}	1a\n1\nc\n\n1	2,3
+	.\\{0,1\\}	ba1a b	0,1
+I	c\\{0,1\\}	bAb	0,0
+	^\\([[:alpha:]]\\?c\\{1,2\\}\\|a\\{2\\}\\)\\+	cbBB	0,1 0,1
+	[^[:space:]]\\{2\\}$	\nA b B	NOMATCH
+I	^[A-Z]$		NOMATCH
+	\\([a-c]*[A-Z]\\{2\\}\\|\\([^a][[:alpha:]]\\|\\(B\\+\\1*\\)*A[A-Z][[:alpha:]]\\{2\\}\\|\n\\{2,\\}\\)[a-c]\\|\\1\\?\n\\?\\)\\+a\\?A*	 ab	ERR 6
+N	[^[:space:]]\\+$	Ab	0,2
+I	\\([^a]\\{0,1\\}ba[^[:space:]]\\{2,\\}\\)*	a 1A\nb	0,0 -1,-1
+N	[^[:space:]]\\{0,1\\}b*[^b-c]		NOMATCH
+	^c\\{1,2\\}$	b \naB\n\nbA\nAA	NOMATCH
+N	\n\\+$	c  	NOMATCH
+N	B\\{2,\\}	acbA	NOMATCH
+I	\\([^[:space:]]B[^b-c]\\{0,1\\}\n\\{0,1\\}\\|\n\\{0,1\\}\\|\\([^[:space:]]c.[^[:space:]]\\+c*\\)*[^a]\\{2,\\}\\)\\+	b	0,0 0,0 -1,-1
+	[^[:space:]]\\{1,2\\}\\(\\(c\\|\\(b*a\\{0,1\\}A\\)\\{1,2\\}.\n[ab]\\?\\)\\{0,1\\}\\)c\\+	c	NOMATCH
+	^[^b-c]\\{1,2\\}[[:alpha:]]$	\n\n bBb1 BB1B	NOMATCH
+IN	\\([ab]\\{2\\}[ab]\\+\\)*.[^a]\\{2,\\}		NOMATCH
+	.\\{2,\\}[A-Z]bA[[:alpha:]]\\(\\(B*a[ab]\\|B\\+\\|[^b-c]\\?A[A-Z]\\?b\\{2\\}\\)[ab][[:alpha:]]\\|[^a]\\)	11 AcA	NOMATCH
+I	B[[:alpha:]]\\+b\\{2,\\}		NOMATCH
+	[A-Z]	 AB1 1	1,2
+	B*[[:alpha:]][ab]\\{2\\}	\nA	NOMATCH
+	A\\?	c   AbB1	0,0
+N	^[^b-c]\\+BB[^b-c]A\\{2\\}\n\\{1,2\\}	 \n\nAc	NOMATCH
+	[a-c][A-Z]	\n 1	NOMATCH
+	^\\(c\\|bb\\+ca\\)\\?cB[^[:space:]][^[:space:]][[:alpha:]]B\\{2\\}[^b-c]\\+		NOMATCH
+	c\\{2\\}.\\{0,1\\}\\([^b-c][a-c]\n\\{2,\\}b\n\\)		NOMATCH
+IN	[^[:space:]]\\{0,1\\}		0,0
+	[ab]A[[:alpha:]][^[:space:]][^[:space:]]\\([^a]a\\|[ab]\\?\\|a\\{2\\}\\).$	a\n\nc1BaA 	NOMATCH
+	\\([A-Z]\\([^[:space:]][A-Z]\\{2,\\}\\)\\?\\([^b-c]*\\|.\\{1,2\\}AB\\{1,2\\}\\)[^[:space:]]\\{1,2\\}\n\\{0,1\\}\\)		NOMATCH
+I	[^a]\\?[^b-c]	cB	NOMATCH
+N	c\\{0,1\\}[^a]*[^b-c]\\{2,\\}	b 	NOMATCH
+N	.\\{2\\}	bb\nABb B	0,2
+I	A\n\\{2\\}[ab]*B\\{0,1\\}$	1aaa c	NOMATCH
+I	a.\\+	c b1B	NOMATCH
+N	^.[ab]	AaAb\nbbc1	0,2
+IN	B\\([[:alpha:]]\n\\{1,2\\}\\)[[:alpha:]]\\{0,1\\}	Bb 1cc	NOMATCH
+	a\\(.\\{0,1\\}[ab]\\{0,1\\}\\)	A\n A	NOMATCH
+	[ab][^b-c]A\nb[[:alpha:]]\\(ac\\?ba*[a-c]\\{1,2\\}\\)*		NOMATCH
+IN	^[^a]\\(.[[:alpha:]]\\)\\{2,\\}\\(\\([^[:space:]]\\1\\{1,2\\}\\)\n\\{1,2\\}b\\{2\\}B\\+\\)\n	\n1AA	NOMATCH
+	^[a-c]\\{2,\\}	1Aa   A	NOMATCH
+N	[^b-c]\\{0,1\\}	b1B\nbbc	0,0
+I	[[:alpha:]]	B  b1cAb1	0,1
+I	^A	b	NOMATCH
+N	^[A-Z]*c\\{2,\\}	a	NOMATCH
+	[A-Z][^a]\\?$	\n\n1bc1aAa 	NOMATCH
+IN	[^b-c]\\?	b 11 BB1\nB1b	0,0
+I	[^[:space:]]\\{2\\}	A ac 	2,4
+	[ab][^[:space:]]\\1\\1[^[:space:]][a-c][[:alpha:]][ab][A-Z][a-c]\\{1,2\\}	\n	ERR 6
+N	[[:alpha:]]\\{0,1\\}	a\nA \n	0,1
+I	a*\\(\n\\([[:alpha:]][^[:space:]]\\{2\\}..\\(B\\{2,\\}.\\|b\\{2\\}[[:alpha:]]\\{0,1\\}\\)\\|a\\|\n\\{2\\}\\(c\\{1,2\\}\\)*\\)\\|c\\{1,2\\}\\|c\\)	B1a	NOMATCH
+	\\([^[:space:]]\\{2,\\}.[^a]\\([a-c]\\{1,2\\}\\)[^[:space:]]\\+\\|[^[:space:]]\n\\{1,2\\}\\|[[:alpha:]].*\\)\\{2,\\}	bb1\na1c1	0,8 6,8 4,5
+N	A[ab][ab]\\?	1A\n\na1cab1	NOMATCH
+IN	\\(\n\\{0,1\\}A\\{2\\}[A-Z]\\{1,2\\}\\)*.b$	AA b	2,4 -1,-1
+	[^[:space:]][^[:space:]]\\+$	B 1 	NOMATCH
+	a\\+	aa1c1a \ncba\n	0,2
+IN	.\\+	a ca	0,4
+N	A	bc 	NOMATCH
+N	^.\\(B*\\(\\(c*\\)\\{1,2\\}\\)\\?\\)	 ba\nBA c	0,1 1,1 1,1 1,1
+I	b\\?	1B\nBbb\n\nAB\nB	0,0
+	A\\{1,2\\}[^b-c]a\\+	bac c\nBc\n	NOMATCH
+	\\(a\\{0,1\\}[A-Z]\\{2,\\}\\(c[^a]\n.\n\\|[^a]\\+\\|\\1c\\)\\{1,2\\}\\)[^b-c]b\\{2,\\}		ERR 6
+	\\([[:alpha:]]\\)[a-c]	 a  A\nB	NOMATCH
+N	[a-c]\\(\n\\{0,1\\}B\\{2,\\}\\|\\([[:alpha:]]\\{2,\\}\n\\{1,2\\}\\)\\{0,1\\}[a-c]\\{1,2\\}\\|[^b-c]\\)[[:alpha:]]	abcABBAcBb	0,4 1,3 -1,-1
+	c[^[:space:]]	cb1B\n\n\nA	0,2
+	A\\{0,1\\}	acBaaB bb 1 	0,0
+N	B[[:alpha:]][[:alpha:]][^b-c][^a]a\\?ca\\(.*a*B\\{2,\\}\\|[^b-c]\\|c\n\\)A[[:alpha:]][ab]	1a\nAc  1A	NOMATCH
+	b\\+[ab]\\?	\n\n1 A	NOMATCH
+I	^B[a-c]\\{2\\}.[^a]\\(\\1\\{2\\}[ab]\\{0,1\\}\\)	b1cAB b1A1 	ERR 6
+I	[a-c]\\+\\([^a]\\)\\+	cAbcaa1cbb b	0,12 11,12
+	[^a]	aAcAB 	1,2
+	[A-Z]\\{1,2\\}$	a1BBb 	NOMATCH
+	^[^a]\\{1,2\\}	cb	0,2
+I	\nb\\{1,2\\}b*	Bbabc	NOMATCH
+N	\n$	\nc\n  cAacAba	NOMATCH
+I	^[ab]\\+$	c\nAB\n	NOMATCH
+	\\([^[:space:]][^a][^[:space:]]\\+\\|[^[:space:]]\\{2\\}\\)\\{2,\\}[a-c]*	bacaacb 1	0,9 6,9
+	[^b-c]\\{2\\}$	1bA\nab aBB	8,10
+	b.\\?[ab]\\+\\(A\\?\\)[A-Z].\\([[:alpha:]]\\{2\\}[^a]\\+[a-c]\\{1,2\\}\\)	BAB1 1a\naBa	NOMATCH
+N	[A-Z]\\+$	bA1aA	4,5
+I	c*\n	bcBBB	NOMATCH
+	[^a]\\+[[:alpha:]]\\(\\(B\\)\\{0,1\\}[a-c]\\+\\)\\([A-Z][ab]\\|[^a]\\{2,\\}b\\1\\{2\\}\\)\\+	c\nac A 	NOMATCH
+	[[:alpha:]]\\{0,1\\}		0,0
+I	a\\{2\\}[ab]*	cAAbBAbbBBaa	1,12
+I	[^a][^[:space:]]\n		NOMATCH
+N	[[:alpha:]].\\?\\(b\\{2\\}\\|b\\|[^a]\\)*$	aAa	1,3 -1,-1
+	[^b-c]\\+\\(c*[A-Z]*B[A-Z][[:alpha:]]\\{2\\}\\|b[^b-c]A\\{2\\}\\)b$	baAc\n\nc1B	NOMATCH
+I	c\\{0,1\\}	1	0,0
+IN	\n\\?.\\(.\\{1,2\\}\\|c[^a]\\{1,2\\}[^a]\\{2\\}\\|\n\\{0,1\\}\\)\\(\\([a-c]\\|a\\{2,\\}\\|\n\\+\\)\\+\\)c\\{2\\}.\\+	1 Ba	NOMATCH
+	\\(\\([[:alpha:]]\\(c\\)B\\)[a-c]\\|[[:alpha:]]*[^[:space:]]*\\)*	A\n1B\n BAABb	0,1 0,1 -1,-1 -1,-1
+	[^a]bb\\{1,2\\}	Ac  BAA	NOMATCH
+N	[a-c]A\\{0,1\\}$	cca1abaA a 	NOMATCH
+I	[^b-c][^a]\\([^[:space:]]\\{2\\}\\)[^b-c]\\{2\\}$	 A cca A	2,8 4,6
+I	.	Ac1Abc	0,1
+	b\\+a\\(B\\{0,1\\}[^a]\\|[A-Z]\\{1,2\\}[A-Z]\\|b\\+\\).\n[^b-c][[:alpha:]]cA\\{0,1\\}		NOMATCH
+I	aA\\+[^a]$	abccB1cc\n A	NOMATCH
+	.\\(B\\{2\\}\\)*[^a]\\?\\(B\n*\\)*	11ccb\n	0,2 -1,-1 -1,-1
+I	[ab]\\{0,1\\}BB\\{2\\}.\\{2,\\}$	b 1 aB	NOMATCH
+	\\(c\\+\n\\|\\1\\{2,\\}\\)\\{2,\\}\\(\\(\\(c\\{1,2\\}\\)\\|\n\\{0,1\\}bAc\nc[a-c]\\{0,1\\}\\)\\?\\)*	Abc1	ERR 6
+	^\n\\+[a-c]\\{0,1\\}	 Aa AB\n\n  a	NOMATCH
+	\\(a\\+\\)*$	 c	2,2 -1,-1
+	[^a].\\{2,\\}.\\{1,2\\}	B	NOMATCH
+I	\\(.B*\\|A\\+[[:alpha:]]\\{0,1\\}\\)*\\(\n\\?\\|[A-Z][^a]c[[:alpha:]]*B\\{2,\\}\\)\\+	bA \n\n  	0,7 6,7 7,7
+	^\n[a-c]\\+	 AAa	NOMATCH
+	\n\\+	 A	NOMATCH
+IN	\n[^[:space:]]\\{2,\\}	1abA1	NOMATCH
+	^[a-c]*[^[:space:]][^a][a-c]\\(c*ba\\{2,\\}\\|A\\{2\\}A*[A-Z]\\{1,2\\}\\|[ab]\\+[^b-c][ab]\\)\n\\+	Bba\ncB 	NOMATCH

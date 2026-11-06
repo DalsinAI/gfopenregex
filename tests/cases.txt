@@ -1,0 +1,114 @@
+# GFOpenRegex hand-written cases: flags, pattern, subject, answer (tab
+# separated; \n \t \\ \xHH escapes). Flags: E extended, P Perl, I icase,
+# N newline, U UTF-8, B notbol, L noteol, F firstmatch, M multiline, D dotall.
+# POSIX basic
+	abc	xabcy	1,4
+	a\(b*\)c	abbbc	0,5 1,4
+	\(a\)\1	xaay	1,3 1,2
+	a*	bbb	0,0
+	^abc$	abc	0,3
+	a^b	a^b	0,3
+	a$b	a$b	0,3
+	*a	*a	0,2
+	\(*a\)	*a	0,2 0,2
+	a\{2,3\}	aaaa	0,3
+	a\{2\}	a	NOMATCH
+	a\|b	b	0,1
+	a\+	aaa	0,3
+	[[:digit:]]\+	ab123c	2,5
+	[]a]	]	0,1
+	[^]a]	]a b	2,3
+	a[	x	ERR 7
+	a\{1	x	ERR 9
+	\(a	x	ERR 8
+	a\)	x	ERR 8
+	\2\(a\)	x	ERR 6
+	a\	x	ERR 5
+	[z-a]	x	ERR 11
+	[[:foo:]]	x	ERR 4
+	a\{3,2\}	x	ERR 10
+# POSIX extended
+E	(a|ab)(c|bcd)(d*)	abcd	0,4 0,1 1,4 4,4
+E	a+|b+	bbaa	0,2
+E	(a|b)*c	abac	0,4 2,3
+E	x(a|ab|abc)y?	xabc	0,4 1,4
+E	a|ab	ab	0,2
+EF	a|ab	ab	0,1
+E	a{2}b	aab	0,3
+E	()	abc	0,0 0,0
+E	\bfoo\b	a foo b	2,5
+E	\<foo\>	foofoo foo	7,10
+E	\w+	  ab_1 	2,6
+EI	ABC	xabcx	1,4
+EI	[a-c]+	CBAd	0,3
+E	A\.B	AxB A.B	4,7
+EN	^b	a\nb	2,3
+E	^b	a\nb	NOMATCH
+EN	a.b	a\nb	NOMATCH
+E	a.b	a\nb	0,3
+EN	[^x]+	ab\ncd	0,2
+EN	c$	abc\ndef	2,3
+EB	^a	abc	NOMATCH
+EL	c$	abc	NOMATCH
+E	(a|aa)*b	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa	NOMATCH
+E	(a*)*b	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaac	NOMATCH
+# ISO 8859-1 bytes (the Amiga's own)
+EI	\xe9	\xc9	0,1
+E	[[:alpha:]]+	x\xe9y	0,3
+E	[[:upper:]]	ab\xc0	2,3
+# UTF-8
+EU	.	\xc3\xa9	0,2
+E	.	\xc3\xa9	0,1
+EU	^.{2}$	\xc3\xa9\xc3\xa8	0,4
+EUI	\xc3\xa9	\xc3\x89	0,2
+EUI	\xd0\xb4	\xd0\x94	0,2
+EU	[\xc3\xa0-\xc3\xbf]+	x\xc3\xa9\xc3\xa8y	1,5
+EU	[[:alpha:]]+	1\xce\xb1\xce\xb2 	1,5
+EU	\w+	\xe4\xb8\xad\xe6\x96\x87!	0,6
+EU	[^a]	\xc3\xa9	0,2
+EU	a.c	a\xffc	0,3
+PU	\w+	\xd0\x9f\xd1\x80\xd0\xb8\xd0\xb2\xd0\xb5\xd1\x82, world	0,12
+PUI	\xce\xa3	\xcf\x82	0,2
+# Perl
+P	(a+?)(b*)	aaabbb	0,1 0,1 1,1
+P	a+?b	aaab	0,4
+P	(?:ab)+	ababx	0,4
+P	\d{2,}	ab1234	2,6
+P	\D+	12ab3	2,4
+P	\s+	a \t b	1,4
+P	\bis\b	this is	5,7
+P	\Bis\b	this is	2,4
+P	foo(?=bar)	foobaz foobar	7,10
+P	foo(?!bar)	foobar foobaz	7,10
+P	(\w)\1	abccd	2,4 2,3
+P	(?i)abc	XABC	1,4
+P	a(?i:b)c	aBC aBc	4,7
+P	(?i:a)B	Ab AB	3,5
+P	^b	a\nb	NOMATCH
+PM	^b	a\nb	2,3
+P	(?m)^b$	a\nb\nc	2,3
+P	a.b	a\nb	NOMATCH
+PD	a.b	a\nb	0,3
+P	(?s)a.b	a\nb	0,3
+P	c$	abc\n	2,3
+P	c\z	abc\n	NOMATCH
+P	c\Z	abc\n	2,3
+P	\Aa	ba	NOMATCH
+P	\\x41\\x{42}	AB	0,2
+P	\Qa.b\E+	a.bb	0,4
+P	a{2,3}?	aaaa	0,2
+P	a{	a{	0,2
+P	[\d.]+	x1.5y	1,4
+P	[^\s]+	  ab 	2,4
+P	(?<year>\d{4})-(\d\d)	2026-11	0,7 0,4 5,7
+P	(?#comment)ab	ab	0,2
+P	(?x) a b # c	ab	0,2
+P	(a)|b	b	0,1 -1,-1
+P	(a|ab)(c|bcd)(d*)	abcd	0,4 0,1 1,4 4,4
+P	(a*)*b	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaac	NOMATCH
+P	(x+x+)+y	xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx	NOMATCH
+P	*a	x	ERR 13
+P	a**	x	ERR 13
+P	(?<=a)b	x	ERR 2
+P	(a	x	ERR 8
+P	\k	x	ERR 5

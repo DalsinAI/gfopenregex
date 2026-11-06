@@ -1,0 +1,37 @@
+name: build
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PC tests
+        run: sh tests/run_host_tests.sh
+      - name: Toolchain and OpenNDK headers
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download v16.2.0-open6 -R DalsinAI/gfopengcc -p 'gfopenamigagcc-16.2.0-open6-x86_64-linux.tar.xz' -p SHA256SUMS -D "$RUNNER_TEMP"
+          (cd "$RUNNER_TEMP" && grep x86_64-linux SHA256SUMS | sha256sum -c - && tar xJf gfopenamigagcc-16.2.0-open6-x86_64-linux.tar.xz)
+          git clone --depth 1 https://github.com/DalsinAI/gfopensdk "$RUNNER_TEMP/gfopensdk"
+      - name: Amiga build (68040, FPU check)
+        run: PREFIX="$RUNNER_TEMP/gfopenamigagcc-16.2.0-open6-x86_64-linux" NDK_INC="$RUNNER_TEMP/gfopensdk/OpenNDK/Include_H" HOST_TESTS=0 sh build-amiga.sh
+      - name: RegexTest on a 68040 (vamos)
+        run: |
+          pip install amitools==0.8.1 machine68k==0.3.0 greenlet
+          cd build-amiga && mkdir -p libs && cp lib/regex.library libs/
+          vamos -C 68040 -m 65536 -H disable -V vam:$PWD -a LIBS:vam:libs tests/RegexTest tests/all.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gfopenregex
+          path: |
+            build-amiga/lib/regex.library
+            build-amiga/lib/libregex.a
+            build-amiga/include
+            build-amiga/docs
+            build-amiga/tests
+            build-amiga/SHA256SUMS

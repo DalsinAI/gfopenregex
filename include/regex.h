@@ -6,9 +6,11 @@
 #ifndef _REGEX_H_
 #define _REGEX_H_
 
-#include <sys/types.h>
+#include <stddef.h>
 
-typedef off_t regoff_t;
+/* libnix's off_t, a long; only <stddef.h> here, so the header also builds
+ * with -nostdinc (the Open SDK's stubs) */
+typedef long regoff_t;
 
 typedef struct {
 	int re_magic;

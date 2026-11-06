@@ -4,6 +4,9 @@
 #ifndef LIBRARIES_REGEX_H
 #define LIBRARIES_REGEX_H
 
+#ifndef EXEC_TYPES_H
+#include <exec/types.h>
+#endif
 #include <regex.h>
 
 #define REGEXNAME "regex.library"

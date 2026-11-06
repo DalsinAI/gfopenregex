@@ -11,10 +11,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: PC tests
         run: sh tests/run_host_tests.sh
-      - name: Toolchain and OpenNDK headers
+      - name: Toolchain, OpenNDK headers, lha
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          sudo apt-get install -y -q jlha-utils
           gh release download v16.2.0-open6 -R DalsinAI/gfopengcc -p 'gfopenamigagcc-16.2.0-open6-x86_64-linux.tar.xz' -p SHA256SUMS -D "$RUNNER_TEMP"
           (cd "$RUNNER_TEMP" && grep x86_64-linux SHA256SUMS | sha256sum -c - && tar xJf gfopenamigagcc-16.2.0-open6-x86_64-linux.tar.xz)
           git clone --depth 1 https://github.com/DalsinAI/gfopensdk "$RUNNER_TEMP/gfopensdk"
@@ -25,13 +26,12 @@ jobs:
           pip install amitools==0.8.1 machine68k==0.3.0 greenlet
           cd build-amiga && mkdir -p libs && cp lib/regex.library libs/
           vamos -C 68040 -m 65536 -H disable -V vam:$PWD -a LIBS:vam:libs tests/RegexTest tests/all.txt
+      - name: Package
+        run: sh tools/package.sh "1.0-rc1" dist
       - uses: actions/upload-artifact@v4
         with:
-          name: gfopenregex
+          name: gfopenregex-dist
           path: |
-            build-amiga/lib/regex.library
-            build-amiga/lib/libregex.a
-            build-amiga/include
-            build-amiga/docs
-            build-amiga/tests
-            build-amiga/SHA256SUMS
+            dist/GFOpenRegex-*.lha
+            dist/GFOpenRegex-*.zip
+            dist/SHA256SUMS

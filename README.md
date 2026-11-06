@@ -23,6 +23,8 @@ By the AmiCradle Team. MIT licensed (LICENSE).
 | `src/rx_api.c` | the calls on `regex_t` |
 | `library/rx_lib.c` | regex.library: RomTag, jump table, AllocVec |
 | `stub/regex_stub.c` | libregex.a: the POSIX calls, opening the library |
+| `command/regex_cmd.c` | `C:Regex`, a grep for AmigaDOS on regex.library |
+| `package/` | `Install-GFOpenRegex`, the Amiga Installer script, and its icon |
 | `include/` | `regex.h`, `libraries/regex.h`, `proto/`, `clib/`, `inline/`, `fd/`, `sfd/regex_lib.sfd` |
 | `docs/regex.library.md` | the calls, flags, syntax and limits |
 | `tests/` | hand-written cases, reference vectors, the PC tools, RegexTest |
@@ -36,8 +38,9 @@ or with a GFOpenAmigaGCC release and OpenNDK's headers:
     PREFIX=/path/to/gfopenamigagcc-16.2.0-open6 NDK_INC=/path/to/OpenNDK/Include_H sh build-amiga.sh
 
 gives `build-amiga/lib/regex.library` (copy to `LIBS:`),
-`build-amiga/lib/libregex.a`, `include/`, `docs/` and
-`tests/RegexTest`. The build runs the PC tests first when the PC has a C
+`build-amiga/lib/libregex.a`, `build-amiga/c/Regex`, `include/`, `docs/`
+and `tests/RegexTest`. `sh tools/package.sh 1.0-rc1` packs them with
+Install-GFOpenRegex as `dist/GFOpenRegex-1.0-rc1.lha` and `.zip`. The build runs the PC tests first when the PC has a C
 compiler and checks that neither the library nor the stub uses floating
 point (68040, soft float specs; nothing in them needs an FPU).
 

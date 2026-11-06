@@ -7,7 +7,8 @@
 #   OUT    the output directory (default build-amiga)
 #   HOST_TESTS=0  skip the PC tests (tests/run_host_tests.sh)
 # Outputs: lib/regex.library (copy to LIBS:), lib/libregex.a (the link
-# stub: <regex.h> and -lregex), include/, docs/, tests/RegexTest and
+# stub: <regex.h> and -lregex), c/Regex (the command), include/, docs/,
+# tests/RegexTest and
 # tests/all.txt (the cases and vectors for RegexTest).
 # The FPU check: the library and the stub use no floating point at all;
 # the build fails if either links a soft-float routine. Built for the
@@ -71,5 +72,8 @@ fi
 "$CC" $CFLAGS -noixemul -o "$OUT/tests/RegexTest" "$HERE/tests/regex_test.c" \
   -L"$OUT/lib" -lregex
 echo "$OUT/tests/RegexTest ($(wc -c < "$OUT/tests/RegexTest") bytes)"
-(cd "$OUT" && sha256sum lib/regex.library lib/libregex.a tests/RegexTest > SHA256SUMS)
+mkdir -p "$OUT/c"
+"$CC" $CFLAGS -noixemul -o "$OUT/c/Regex" "$HERE/command/regex_cmd.c" -L"$OUT/lib" -lregex
+echo "$OUT/c/Regex ($(wc -c < "$OUT/c/Regex") bytes)"
+(cd "$OUT" && sha256sum lib/regex.library lib/libregex.a c/Regex tests/RegexTest > SHA256SUMS)
 cat "$OUT/SHA256SUMS"

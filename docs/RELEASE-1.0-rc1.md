@@ -5,9 +5,13 @@ point) and libregex.a, the link stub that keeps the POSIX calls of
 `<regex.h>`. POSIX basic and extended syntax, Perl syntax with
 `REG_PERL`, UTF-8 with `REG_UTF8`. Clean room, MIT licence.
 
-Install: copy `Libs/regex.library` to `LIBS:`. Check: `C/RegexTest
-Tests/regex-cases.txt` should end with `0 differ`. Programs: include
+Or copy `Libs/regex.library` to `LIBS:` by hand. Check: `Tests/RegexTest
+regex-cases.txt` (from the Tests drawer) should end with `0 differ`. Programs: include
 `<regex.h>` from `SDK/Include` and link `SDK/Lib/libregex.a`. The calls,
 flags and syntax are in `Docs/regex.library.md`.
+
+Install: double-click Install-GFOpenRegex. It copies regex.library to
+LIBS: and the Regex command (a grep on the library) to C:, and the SDK
+and documents where you choose.
 
 Not yet run on a real 68040 (tested under vamos, a 68040 emulation).

@@ -99,6 +99,22 @@ compiled `regex_t` is read-only to `regexec`, so tasks may share one.
 Limits: 32767 instructions per program (`REG_ESPACE` past that), counts up
 to 255.
 
+## The Regex command
+
+`C:Regex` searches files for lines that match, as grep does:
+
+    Regex PATTERN/A,FILES/M,EXTENDED/S,PERL/S,NOCASE/S,UTF8/S,INVERT/S,
+          COUNT/S,NUMBER/S,NAMES/S,FILESONLY/S,ONLY/S,QUIET/S
+
+PATTERN is POSIX basic syntax, or extended with EXTENDED, or Perl's with
+PERL (quote a pattern that looks like a keyword or holds spaces). FILES
+take AmigaDOS wildcards (`#?.c`); with none, Regex reads its input.
+INVERT shows lines that don't match, COUNT the number of lines, NUMBER
+puts line numbers first, NAMES the file name (on by default for more than
+one file), FILESONLY just the names of files with a match, ONLY just the
+matching parts, QUIET nothing. Return code 0 when a line matched, 5 when
+none did, 20 on an error. Ctrl-C stops it.
+
 ## Errors
 
 `REG_NOMATCH` 1, `REG_BADPAT` 2, `REG_ECOLLATE` 3, `REG_ECTYPE` 4,

@@ -38,10 +38,10 @@
 ; the command
 (copyfiles
     (prompt "Copying the Regex command to C:")
-    (help "Regex searches files for lines that match a regular expression, as grep does. Type Regex ? in a Shell for its template.")
+    (help "C:Regex uses PCRE2 10.49; C:ARegex keeps the classic library-backed command. Both retain AmigaDOS templates.")
     (source (tackon #from "C"))
     (dest "C:")
-    (choices "Regex")
+    (choices "ARegex" "Regex")
     (optional "force" "askuser"))
 (complete 60)
 
@@ -70,6 +70,6 @@
 (complete 100)
 (if @pretend
     (message "Pretend: nothing was copied or changed.")
-    (message (cat "GFOpenRegex " #version " is installed: regex.library in LIBS: and Regex in C:."
+    (message (cat "GFOpenRegex " #version " is installed: regex.library in LIBS: and ARegex (classic) and Regex (PCRE2) in C:."
                   "\n\nTry it in a Shell: Regex ? shows the template.")))
 (exit (quiet))

@@ -9,3 +9,7 @@
 - Guest stdout evidence: `tests/evidence/regex-pcre2-aregex-68040-guest-pass.log` for integrated new and classic commands.
 
 **Not qualified yet:** a *separately loadable* PCRE2-backed Amiga shared library (the new `C:Regex` currently **statically links** PCRE2), mixed threading/reentrancy, every PCRE2 option, multi-line file buffering, performance on real 68040 hardware, AROS, and all PCRE2 upstream regression tests. The existing `regex.library` ABI is preserved. Do not call this a GFOpenRegex 2.0 runtime RC without those gates.
+
+## 19 November extension: native shared-library implementation
+
+This older command-only alpha evidence remains historically accurate. The later dual-library milestone moved the PCRE2 engine from the command binary into `LIBS:regex.library` v2; the original engine moved to `LIBS:aregex.library` v1. Modern and classic commands now dynamically open their matching libraries. Current instructions and evidence: `docs/DUAL-LIBRARY-MIGRATION-20261119.md`.

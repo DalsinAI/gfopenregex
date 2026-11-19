@@ -1,6 +1,6 @@
 ; $VER: Install-GFOpenRegex 1.0-rc1 (6.11.2026)
-; The Amiga Installer script for GFOpenRegex: regex.library, the Regex
-; command and, if wanted, the SDK and documents.
+; The Amiga Installer script for GFOpenRegex: two libraries, ARegex/Regex
+; commands and, if wanted, the SDK and documents.
 ; Run it from its icon, beside the GFOpenRegex drawer where the archive was unpacked.
 
 (set @app-name "GFOpenRegex")
@@ -28,9 +28,15 @@
 
 ; the library: a newer one already in LIBS: is kept
 (copylib
-    (prompt "Copying regex.library to LIBS:")
+    (prompt "Copying PCRE2 regex.library v2 to LIBS:")
     (help @copylib-help)
     (source (tackon #from "Libs/regex.library"))
+    (dest "LIBS:")
+    (confirm "expert"))
+(copylib
+    (prompt "Copying classic aregex.library v1 to LIBS:")
+    (help @copylib-help)
+    (source (tackon #from "Libs/aregex.library"))
     (dest "LIBS:")
     (confirm "expert"))
 (complete 40)
@@ -70,6 +76,6 @@
 (complete 100)
 (if @pretend
     (message "Pretend: nothing was copied or changed.")
-    (message (cat "GFOpenRegex " #version " is installed: regex.library in LIBS: and ARegex (classic) and Regex (PCRE2) in C:."
+    (message (cat "GFOpenRegex " #version " is installed: regex.library and aregex.library in LIBS:; ARegex (classic) and Regex (PCRE2) in C:."
                   "\n\nTry it in a Shell: Regex ? shows the template.")))
 (exit (quiet))

@@ -1,6 +1,6 @@
 #!/bin/sh
 # MIT (integration), upstream PCRE2 10.49 BSD-3-Clause WITH PCRE2-exception.
-# Reproducible native 68040 PCRE2 command: no 68k JIT, Unicode enabled.
+# Reproducible native 68040 PCRE2 shared library and command: no 68k JIT, Unicode enabled.
 set -eu
 HERE=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 P=${PREFIX:?Set PREFIX to the GCC 16.2 toolchain prefix}
@@ -28,10 +28,18 @@ cmake -S "$SRC" -B "$B" -DCMAKE_SYSTEM_NAME=Generic \
   -DPCRE2_SUPPORT_UNICODE=ON -DPCRE2_BUILD_PCRE2POSIX=OFF
 cmake --build "$B" --target pcre2-8-static -j "${JOBS:-4}"
 mkdir -p "$OUT/c" "$OUT/lib"
-"$P/bin/m68k-amigaos-gcc" -Os -m68040 -m68881 -noixemul \
-  -Wall -Wextra -Wno-unused-function -DGF_PCRE2=1 \
-  -I"$P/m68k-amigaos/ndk-include.vendor" -I"$B/interface" \
-  "$HERE/command/regex_cmd.c" "$B/libpcre2-8.a" -o "$OUT/c/Regex"
+COMMON="-m68040 -m68881 -Os -fno-delete-null-pointer-checks -fno-tree-loop-distribute-patterns -Wno-unused-function -I$P/m68k-amigaos/ndk-include.vendor -I$HERE/include -I$B/interface"
+"$P/bin/m68k-amigaos-gcc" $COMMON -fno-toplevel-reorder -DGF_PCRE2_LIBRARY=1 \
+  -mcrt=nix20 -nostartfiles -o "$OUT/lib/regex.library" \
+  "$HERE/library/rx_lib.c" "$HERE/pcre2/amiga_backend.c" "$B/libpcre2-8.a" \
+  -Wl,-Map,"$OUT/lib/regex.library.map"
+"$P/bin/m68k-amigaos-gcc" $COMMON -noixemul -c "$HERE/stub/regex_stub.c" -o "$OUT/obj/regex_stub.o"
+"$P/bin/m68k-amigaos-ar" rcs "$OUT/lib/libregex.a" "$OUT/obj/regex_stub.o"
+if "$P/bin/m68k-amigaos-nm" -u "$OUT/lib/regex.library" | grep .; then
+ echo 'regex.library has unresolved symbols'; exit 1
+fi
+"$P/bin/m68k-amigaos-gcc" $COMMON -noixemul -DGF_PCRE2=1 \
+  "$HERE/command/regex_cmd.c" -L"$OUT/lib" -lregex -o "$OUT/c/Regex"
 cp "$B/libpcre2-8.a" "$OUT/lib/libpcre2-8.a"
-file "$OUT/c/Regex"
-echo "PCRE2 Regex command: $OUT/c/Regex"
+file "$OUT/lib/regex.library" "$OUT/c/Regex"
+echo "PCRE2 shared regex.library: $OUT/lib/regex.library"

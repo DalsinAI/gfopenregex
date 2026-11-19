@@ -48,37 +48,37 @@ CORE="rx_compile rx_exec rx_unicode rx_api"
 SRC=
 for f in $CORE; do SRC="$SRC $HERE/src/$f.c"; done
 "$CC" $CFLAGS -mcrt=nix20 -fno-toplevel-reorder -nostartfiles -nostdlib \
-  -o "$OUT/lib/regex.library" "$HERE/library/rx_lib.c" $SRC \
-  -lgcc -Wl,-Map,"$OUT/lib/regex.library.map"
-echo "$OUT/lib/regex.library ($(wc -c < "$OUT/lib/regex.library") bytes)"
+  -o "$OUT/lib/aregex.library" "$HERE/library/aregex_lib.c" $SRC \
+  -lgcc -Wl,-Map,"$OUT/lib/aregex.library.map"
+echo "$OUT/lib/aregex.library ($(wc -c < "$OUT/lib/aregex.library") bytes)"
 
-"$CC" $CFLAGS -noixemul -c "$HERE/stub/regex_stub.c" -o "$OUT/obj/regex_stub.o"
-rm -f "$OUT/lib/libregex.a"
-"$AR" rcs "$OUT/lib/libregex.a" "$OUT/obj/regex_stub.o"
+"$CC" $CFLAGS -noixemul -DGF_AREGEX=1 -c "$HERE/stub/regex_stub.c" -o "$OUT/obj/aregex_stub.o"
+rm -f "$OUT/lib/libaregex.a"
+"$AR" rcs "$OUT/lib/libaregex.a" "$OUT/obj/aregex_stub.o"
+# regex.library v2 and libregex.a are built with PCRE2 below. No old ABI
+# vector changes: the classic six LVOs retain their offsets; v2 adds one.
+if [ "${BUILD_PCRE2:-1}" = 1 ]; then
+    PREFIX="$P" OUT="$OUT" sh "$HERE/tools/build-pcre2-amiga.sh"
+fi
 
 # the FPU check
 FLOAT='__(add|sub|mul|div|neg|cmp|eq|ne|lt|le|gt|ge|unord)(s|d|x)f[23]|__(fix|fixuns|float|floatun)(s|d|x)(i|d)f|__extend|__trunc|IEEEDP|IEEESP|SPFix|SPFlt'
-for f in "$OUT/lib/regex.library" "$OUT/obj/regex_stub.o"; do
+for f in "$OUT/lib/aregex.library" "$OUT/obj/aregex_stub.o"; do
     if "$NM" "$f" 2>/dev/null | grep -E "$FLOAT" >/dev/null; then
         echo "FPU check: $f uses floating point:"; "$NM" "$f" | grep -E "$FLOAT"; exit 1
     fi
 done
-echo "FPU check: no floating point in regex.library or libregex.a"
+echo "FPU check: no floating point in aregex.library or libaregex.a"
 # the library must need nothing from outside (no C library)
-if "$NM" -u "$OUT/lib/regex.library" | grep . ; then
-    echo "regex.library has undefined symbols"; exit 1
+if "$NM" -u "$OUT/lib/aregex.library" | grep . ; then
+    echo "aregex.library has undefined symbols"; exit 1
 fi
 
 "$CC" $CFLAGS -noixemul -o "$OUT/tests/RegexTest" "$HERE/tests/regex_test.c" \
-  -L"$OUT/lib" -lregex
+  -L"$OUT/lib" -laregex
 echo "$OUT/tests/RegexTest ($(wc -c < "$OUT/tests/RegexTest") bytes)"
 mkdir -p "$OUT/c"
-"$CC" $CFLAGS -noixemul -o "$OUT/c/ARegex" "$HERE/command/regex_cmd.c" -L"$OUT/lib" -lregex
+"$CC" $CFLAGS -noixemul -o "$OUT/c/ARegex" "$HERE/command/regex_cmd.c" -L"$OUT/lib" -laregex
 echo "$OUT/c/ARegex ($(wc -c < "$OUT/c/ARegex") bytes)"
-# PCRE2 is built as a separate static engine for the new C:Regex command.
-# This does not change the existing MIT regex.library ABI or the LVO table.
-if [ "${BUILD_PCRE2:-1}" = 1 ]; then
-    PREFIX="$P" OUT="$OUT" sh "$HERE/tools/build-pcre2-amiga.sh"
-fi
-(cd "$OUT" && sha256sum lib/regex.library lib/libregex.a c/ARegex tests/RegexTest $([ "${BUILD_PCRE2:-1}" = 1 ] && printf 'c/Regex') > SHA256SUMS)
+(cd "$OUT" && sha256sum lib/aregex.library lib/libaregex.a c/ARegex tests/RegexTest $([ "${BUILD_PCRE2:-1}" = 1 ] && printf 'lib/regex.library lib/libregex.a c/Regex') > SHA256SUMS)
 cat "$OUT/SHA256SUMS"

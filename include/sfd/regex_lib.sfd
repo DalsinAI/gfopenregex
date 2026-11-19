@@ -15,4 +15,6 @@ ULONG RegError(LONG errcode, CONST regex_t * preg, STRPTR errbuf, ULONG size) (d
 VOID RegFree(regex_t * preg) (a0)
 LONG RegNComp(regex_t * preg, CONST_STRPTR pattern, ULONG length, LONG cflags) (a0,a1,d0,d1)
 LONG RegNExec(CONST regex_t * preg, CONST_STRPTR string, ULONG length, ULONG nmatch, regmatch_t * pmatch, LONG eflags) (a0,a1,d0,d1,a2,d2)
+* v2 PCRE2-only: old aregex.library keeps original six LVOs
+LONG RegSetMatchLimit(regex_t * preg, ULONG limit) (a0,d0)
 ==end

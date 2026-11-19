@@ -38,6 +38,10 @@ typedef struct {
 #define REG_DOTALL     0x4000  /* with REG_PERL: . takes a newline too, as (?s) */
 #define REG_MULTILINE  0x8000  /* with REG_PERL: ^ and $ at every line, as (?m) */
 #define REG_FIRSTMATCH 0x10000 /* leftmost-first in POSIX syntax too */
+/* GFOpenRegex 2 / PCRE2 flags (ignored by legacy ARegex) */
+#define REG_UNGREEDY 0x20000
+#define REG_UCP 0x40000
+#define REG_LITERAL 0x80000
 
 /* errors */
 #define REG_NOMATCH     1
@@ -72,6 +76,8 @@ int regexec(const regex_t *preg, const char *string, size_t nmatch,
             regmatch_t pmatch[], int eflags);
 size_t regerror(int errcode, const regex_t *preg, char *errbuf, size_t errbuf_size);
 void regfree(regex_t *preg);
+/* regex.library v2: per-pattern PCRE2 backtracking limit */
+int regsetmatchlimit(regex_t *preg, unsigned long limit);
 /* GFOpenRegex's own: pattern and subject with lengths (NULs allowed) */
 int regncomp(regex_t *preg, const char *pattern, size_t length, int cflags);
 int regnexec(const regex_t *preg, const char *string, size_t length, size_t nmatch,

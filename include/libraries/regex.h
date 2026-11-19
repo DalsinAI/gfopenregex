@@ -10,7 +10,7 @@
 #include <regex.h>
 
 #define REGEXNAME "regex.library"
-#define REGEX_VERSION 1
+#define REGEX_VERSION 2
 
 /* when libnix's <regex.h> came first */
 #ifndef REG_PERL

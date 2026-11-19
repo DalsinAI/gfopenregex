@@ -1,7 +1,7 @@
 # GFOpenRegex
 
-`regex.library`: regular expressions for AmigaOS 3.x, as a shared library
-and a link stub. POSIX `regcomp`/`regexec`/`regerror`/`regfree` (basic and
+`regex.library` (PCRE2 10.49) and `aregex.library` (original MIT engine):
+regular expressions for AmigaOS 3.x, as shared libraries and link stubs. POSIX `regcomp`/`regexec`/`regerror`/`regfree` (basic and
 extended syntax), with Perl syntax, UTF-8 and lengths as options. One copy
 in `LIBS:` for every port, in place of each port carrying its own regex
 code (Boost.Regex, Henry Spencer's, glibc's...).
@@ -78,4 +78,13 @@ group); those cases are left out of the vectors.
 
 ## Command migration: C:ARegex (classic), C:Regex (PCRE2)
 
-The original MIT `regex.library` ABI and the Team 3 engine remain unchanged. The former `C:Regex` becomes **`C:ARegex`**, preserving the original syntax. The new **`C:Regex`** links current pinned PCRE2 10.49 (UTF-8/Unicode enabled, JIT disabled on 68040) and extends the AmigaDOS template with modern controls. Both commands are packaged together. See [PCRE2 command migration](docs/REGEX-PCRE2-COMMAND.md). Our code remains MIT; upstream PCRE2 keeps `BSD-3-Clause WITH PCRE2-exception`. No PCRE1 / GPL code is imported. The new command's static PCRE2 backend is not yet a shared `gfopenregex.library` release.
+The original MIT engine and its six LVOs now live in `aregex.library` v1. The former `C:Regex` is `C:ARegex`. The new `regex.library` v2 links PCRE2 10.49 (Unicode enabled, JIT disabled on 68040) and adds a seventh limit-control LVO; `C:Regex` opens it dynamically. Both are packaged together. Our code is MIT; PCRE2 remains `BSD-3-Clause WITH PCRE2-exception`. No PCRE1 or GPL code is imported. This **library rename is not a transparent drop-in for all pre-2.0 programs**; see the migration guide.
+
+### GFOpenRegex 2.0 shared-library names
+
+- `LIBS:aregex.library` v1: original Team 3 MIT engine, original six LVOs and POSIX/Perl behaviour. Existing pre-2.0 binaries expecting `regex.library` v1 should instead use the original v1 release or relink against `libaregex.a`; the library name change is **not** binary-transparent.
+- `LIBS:regex.library` v2: new PCRE2 10.49 engine, preserving the six original LVO offsets with an additional `RegSetMatchLimit` vector. Regex matching semantics follow PCRE2 and can differ from the old POSIX engine.
+- SDK: `libaregex.a` (classic) and `libregex.a` (PCRE2) with `<regex.h>`. Both AmigaDOS commands are dynamic clients of their respective libraries (no PCRE2 duplicated inside C:Regex).
+- Our code remains MIT, upstream PCRE2 BSD-3-Clause WITH PCRE2-exception.
+
+See [dual-library migration](docs/DUAL-LIBRARY-MIGRATION-20261119.md) for installation and compatibility warnings.

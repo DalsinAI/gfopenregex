@@ -14,6 +14,7 @@ ULONG RegError(LONG errcode, CONST regex_t *preg, STRPTR errbuf, ULONG size);
 VOID RegFree(regex_t *preg);
 LONG RegNComp(regex_t *preg, CONST_STRPTR pattern, ULONG length, LONG cflags);
 LONG RegNExec(CONST regex_t *preg, CONST_STRPTR string, ULONG length, ULONG nmatch, regmatch_t *pmatch, LONG eflags);
+LONG RegSetMatchLimit(regex_t *preg, ULONG limit);
 
 #ifdef __cplusplus
 }

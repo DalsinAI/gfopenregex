@@ -28,4 +28,7 @@
 #define RegNExec(preg, string, length, nmatch, pmatch, eflags) \
 	LP6(0x3c, LONG, RegNExec, CONST regex_t *, preg, a0, CONST_STRPTR, string, a1, ULONG, length, d0, ULONG, nmatch, d1, regmatch_t *, pmatch, a2, LONG, eflags, d2, , REGEX_BASE_NAME)
 
+#define RegSetMatchLimit(preg, limit) \
+	LP2(0x42, LONG, RegSetMatchLimit, regex_t *, preg, a0, ULONG, limit, d0, , REGEX_BASE_NAME)
+
 #endif

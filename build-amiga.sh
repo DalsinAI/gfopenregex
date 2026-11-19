@@ -7,7 +7,7 @@
 #   OUT    the output directory (default build-amiga)
 #   HOST_TESTS=0  skip the PC tests (tests/run_host_tests.sh)
 # Outputs: lib/regex.library (copy to LIBS:), lib/libregex.a (the link
-# stub: <regex.h> and -lregex), c/Regex (the command), include/, docs/,
+# stub: <regex.h> and -lregex), c/ARegex (legacy command), c/Regex (PCRE2 command), include/, docs/,
 # tests/RegexTest and
 # tests/all.txt (the cases and vectors for RegexTest).
 # The FPU check: the library and the stub use no floating point at all;
@@ -42,7 +42,7 @@ cat "$HERE/tests/cases.txt" "$HERE/tests/vectors.txt" > "$OUT/tests/all.txt"
 
 # as gfopentls and gfopenntlm: no loops turned into memset/memcpy calls,
 # and address 0 is memory on an Amiga
-CFLAGS="-m68040 -specs=$SPECS -Os -fno-tree-loop-distribute-patterns -fno-delete-null-pointer-checks -fomit-frame-pointer -Wall -Wextra -Werror $INC"
+CFLAGS="-m68040 -specs=$SPECS -Os -fno-tree-loop-distribute-patterns -fno-delete-null-pointer-checks -fomit-frame-pointer -Wall -Wextra -Werror -Wno-unused-function $INC"
 CORE="rx_compile rx_exec rx_unicode rx_api"
 
 SRC=
@@ -73,7 +73,12 @@ fi
   -L"$OUT/lib" -lregex
 echo "$OUT/tests/RegexTest ($(wc -c < "$OUT/tests/RegexTest") bytes)"
 mkdir -p "$OUT/c"
-"$CC" $CFLAGS -noixemul -o "$OUT/c/Regex" "$HERE/command/regex_cmd.c" -L"$OUT/lib" -lregex
-echo "$OUT/c/Regex ($(wc -c < "$OUT/c/Regex") bytes)"
-(cd "$OUT" && sha256sum lib/regex.library lib/libregex.a c/Regex tests/RegexTest > SHA256SUMS)
+"$CC" $CFLAGS -noixemul -o "$OUT/c/ARegex" "$HERE/command/regex_cmd.c" -L"$OUT/lib" -lregex
+echo "$OUT/c/ARegex ($(wc -c < "$OUT/c/ARegex") bytes)"
+# PCRE2 is built as a separate static engine for the new C:Regex command.
+# This does not change the existing MIT regex.library ABI or the LVO table.
+if [ "${BUILD_PCRE2:-1}" = 1 ]; then
+    PREFIX="$P" OUT="$OUT" sh "$HERE/tools/build-pcre2-amiga.sh"
+fi
+(cd "$OUT" && sha256sum lib/regex.library lib/libregex.a c/ARegex tests/RegexTest $([ "${BUILD_PCRE2:-1}" = 1 ] && printf 'c/Regex') > SHA256SUMS)
 cat "$OUT/SHA256SUMS"

@@ -27,7 +27,7 @@ cp "$B/lib/libregex.a" "$R/SDK/Lib/"
 cp "$HERE/docs/regex.library.md" "$HERE/docs/REGEX-PCRE2-COMMAND.md" "$HERE/README.md" "$HERE/LICENSE" "$R/Docs/"
 cp "$HERE/pcre2/PCRE2-LICENCE.md" "$R/Docs/PCRE2-LICENCE.md"
 n=$(grep -cv '^#' "$B/tests/all.txt" || true)
-COMMIT=$(git -C "$HERE" rev-parse --short HEAD 2>/dev/null || echo unknown)
+COMMIT=${SOURCE_COMMIT:-$(git -C "$HERE" rev-parse --short HEAD 2>/dev/null || echo unknown)}
 cat > "$R/ReadMe.txt" <<TXT
 GFOpenRegex $V
 regex.library: POSIX regular expressions for AmigaOS 3.x, Perl syntax

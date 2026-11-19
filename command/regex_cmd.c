@@ -54,7 +54,7 @@ static int match_failed;
 #ifdef GF_PCRE2
 static int match_line(regmatch_t *m,int flags,const char *subject) {
  int r=regexec(&re,subject,1,m,flags);
- if(r==GFREG_MATCH_ERROR){ char msg[128];regerror(r,&re,msg,sizeof(msg));printf("Regex: PCRE2 match error: %s\n",msg);match_failed=1; }
+ if(r!=0 && r!=GFREG_NOMATCH){ char msg[128];regerror(r,&re,msg,sizeof(msg));printf("Regex: PCRE2 match error: %s\n",msg);match_failed=1; }
  return r;
 }
 #else

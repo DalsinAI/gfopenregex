@@ -1,12 +1,12 @@
-/* Regex: search files for lines that match a regular expression, through
- * regex.library. The AmigaDOS command of GFOpenRegex.
+/* AmigaDOS commands: ARegex uses regex.library; Regex uses PCRE2 10.49.
+ * Both share the CLI and file scanning interface.
  *
  * Template: PATTERN/A,FILES/M,EXTENDED/S,PERL/S,NOCASE/S,UTF8/S,INVERT/S,
  *           COUNT/S,NUMBER/S,NAMES/S,FILESONLY/S,ONLY/S,QUIET/S
  * (no one-letter keywords, so a short pattern isn't taken for one)
  * FILES takes AmigaDOS wildcards (#?.c); no FILES reads the input.
  * Return code 0 when a line matched, 5 (WARN) when none did, 20 on an
- * error (a bad pattern, a file that can't be read, no regex.library).
+ * error (a bad pattern, an unreadable file, or a missing classic library).
  * MIT, Copyright (c) 2026 AmiCradle Team. */
 #include <exec/types.h>
 #include <exec/memory.h>
@@ -15,23 +15,51 @@
 #include <dos/rdargs.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
+#if defined(GF_PCRE2)
+#include "../pcre2/compat.h"
+#else
 #include <regex.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 
 static const char version[] __attribute__((used)) =
-	"$VER: Regex 1.0 (6.11.2026) GFOpenRegex, AmiCradle Team";
+#if defined(GF_PCRE2)
+    "$VER: Regex 2.0 (19.11.2026) GFOpenRegex PCRE2 10.49";
+#else
+    "$VER: ARegex 1.0 (6.11.2026) GFOpenRegex classic engine";
+#endif
 
+#ifdef GF_PCRE2
+#define TEMPLATE "PATTERN/A,FILES/M,EXTENDED/S,PERL/S,NOCASE/S,UTF8/S," \
+                 "INVERT/S,COUNT/S,NUMBER/S,NAMES/S,FILESONLY/S,ONLY/S,QUIET/S," \
+                 "DOTALL/S,MULTILINE/S,UNGREEDY/S,UCP/S,LITERAL/S,LIMIT/N/K"
+#else
 #define TEMPLATE "PATTERN/A,FILES/M,EXTENDED/S,PERL/S,NOCASE/S,UTF8/S," \
                  "INVERT/S,COUNT/S,NUMBER/S,NAMES/S,FILESONLY/S,ONLY/S,QUIET/S"
+#endif
 enum { A_PATTERN, A_FILES, A_EXT, A_PERL, A_NOCASE, A_UTF8, A_INVERT, A_COUNT,
-       A_NUMBER, A_NAMES, A_FILESONLY, A_ONLY, A_QUIET, A_N };
+       A_NUMBER, A_NAMES, A_FILESONLY, A_ONLY, A_QUIET,
+#ifdef GF_PCRE2
+ A_DOTALL,A_MULTILINE,A_UNGREEDY,A_UCP,A_LITERAL,A_LIMIT,
+#endif
+ A_N };
 
 static LONG args[A_N];
 static regex_t re;
 static char *line;
 static size_t cap = 4096;
 static long total;
+static int match_failed;
+#ifdef GF_PCRE2
+static int match_line(regmatch_t *m,int flags,const char *subject) {
+ int r=regexec(&re,subject,1,m,flags);
+ if(r==GFREG_MATCH_ERROR){ char msg[128];regerror(r,&re,msg,sizeof(msg));printf("Regex: PCRE2 match error: %s\n",msg);match_failed=1; }
+ return r;
+}
+#else
+#define match_line(m,flags,subject) regexec(&re,subject,1,m,flags)
+#endif
 
 /* one line of any length into line[]; returns its length or -1 at the end */
 static long read_line(BPTR fh)
@@ -73,7 +101,8 @@ static int search(BPTR fh, const char *name, int names)
 		}
 		m.rm_so = 0;
 		m.rm_eo = n;
-		hit = regexec(&re, line, 1, &m, REG_STARTEND) == 0;
+		hit = match_line(&m, REG_STARTEND, line) == 0;
+        if(match_failed)return -1;
 		if (args[A_INVERT]) hit = !hit;
 		if (!hit) continue;
 		count++;
@@ -85,7 +114,7 @@ static int search(BPTR fh, const char *name, int names)
 			while (pos <= n) {
 				m.rm_so = pos;
 				m.rm_eo = n;
-				if (regexec(&re, line, 1, &m, REG_STARTEND | (pos ? REG_NOTBOL : 0)))
+				if (match_line(&m, REG_STARTEND | (pos ? REG_NOTBOL : 0), line))
 					break;
 				if (m.rm_eo > m.rm_so) {
 					if (names && name) printf("%s:", name);
@@ -93,6 +122,7 @@ static int search(BPTR fh, const char *name, int names)
 					printf("%.*s\n", (int)(m.rm_eo - m.rm_so), line + m.rm_so);
 				}
 				pos = m.rm_eo > m.rm_so ? m.rm_eo : m.rm_eo + 1;
+                if(match_failed)return -1;
 			}
 		} else {
 			if (names && name) printf("%s:", name);
@@ -124,6 +154,18 @@ int main(void)
 	else if (args[A_EXT]) cflags |= REG_EXTENDED;
 	if (args[A_NOCASE]) cflags |= REG_ICASE;
 	if (args[A_UTF8]) cflags |= REG_UTF8;
+#ifdef GF_PCRE2
+ if(args[A_DOTALL])cflags|=REG_DOTALL;
+ if(args[A_MULTILINE])cflags|=REG_MULTILINE;
+ if(args[A_UNGREEDY])cflags|=REG_UNGREEDY;
+ if(args[A_UCP])cflags|=REG_UCP;
+ if(args[A_LITERAL])cflags|=REG_LITERAL;
+ if(args[A_LIMIT]) {
+  LONG lim=*(LONG *)args[A_LIMIT];
+  if(lim<=0){PutStr("Regex: LIMIT must be positive\n");FreeArgs(rd);return RETURN_FAIL;}
+  gfreg_match_limit(&re,(uint32_t)lim);
+ }
+#endif
 	if (args[A_INVERT] || args[A_COUNT] || args[A_QUIET] || args[A_FILESONLY]) cflags |= REG_NOSUB;
 	r = regcomp(&re, (const char *)args[A_PATTERN], cflags);
 	if (r) {
@@ -138,7 +180,7 @@ int main(void)
 		fflush(stdout);
 		r = search(Input(), NULL, 0);
 		if (r > 0) any = 1;
-		if (r == -2) rc = RETURN_FAIL;
+		if (r < 0) rc = RETURN_FAIL;
 	} else {
 		STRPTR *f;
 		struct AnchorPath *ap = (struct AnchorPath *)AllocVec(sizeof(struct AnchorPath) + 512, MEMF_CLEAR);
@@ -164,7 +206,7 @@ int main(void)
 				r = search(fh, (const char *)ap->ap_Buf, multi);
 				Close(fh);
 				if (r > 0) any = 1;
-				if (r == -2) { rc = RETURN_FAIL; break; }
+				if (r < 0) { rc = RETURN_FAIL; break; }
 			}
 			if (e != ERROR_NO_MORE_ENTRIES && e != 0 && rc != RETURN_FAIL) {
 				PrintFault(e, *f);

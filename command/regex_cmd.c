@@ -163,7 +163,6 @@ int main(void)
  if(args[A_LIMIT]) {
   LONG lim=*(LONG *)args[A_LIMIT];
   if(lim<=0){PutStr("Regex: LIMIT must be positive\n");FreeArgs(rd);return RETURN_FAIL;}
-  gfreg_match_limit(&re,(uint32_t)lim);
  }
 #endif
 	if (args[A_INVERT] || args[A_COUNT] || args[A_QUIET] || args[A_FILESONLY]) cflags |= REG_NOSUB;
@@ -174,6 +173,15 @@ int main(void)
 		FreeArgs(rd);
 		return RETURN_FAIL;
 	}
+#ifdef GF_PCRE2
+	if (args[A_LIMIT] &&
+	    gfreg_match_limit(&re, (uint32_t)*(LONG *)args[A_LIMIT]) != 0) {
+		PutStr("Regex: could not set LIMIT\n");
+		regfree(&re);
+		FreeArgs(rd);
+		return RETURN_FAIL;
+	}
+#endif
 	line = (char *)AllocVec(cap, MEMF_ANY);
 	if (!line) { PutStr("Regex: not enough memory\n"); regfree(&re); FreeArgs(rd); return RETURN_FAIL; }
 	if (!args[A_FILES]) {

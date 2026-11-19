@@ -75,3 +75,7 @@ characters.
 Where glibc and GFOpenRegex differ, it has been glibc's back-reference
 handling (it misses matches such as `\(B\{0,1\}\)...\1` on an empty
 group); those cases are left out of the vectors.
+
+## Command migration: C:ARegex (classic), C:Regex (PCRE2)
+
+The original MIT `regex.library` ABI and the Team 3 engine remain unchanged. The former `C:Regex` becomes **`C:ARegex`**, preserving the original syntax. The new **`C:Regex`** links current pinned PCRE2 10.49 (UTF-8/Unicode enabled, JIT disabled on 68040) and extends the AmigaDOS template with modern controls. Both commands are packaged together. See [PCRE2 command migration](docs/REGEX-PCRE2-COMMAND.md). Our code remains MIT; upstream PCRE2 keeps `BSD-3-Clause WITH PCRE2-exception`. No PCRE1 / GPL code is imported. The new command's static PCRE2 backend is not yet a shared `gfopenregex.library` release.

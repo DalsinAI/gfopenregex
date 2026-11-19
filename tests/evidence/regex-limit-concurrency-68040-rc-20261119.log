@@ -1,0 +1,85 @@
+GFOpenRegex 2.0 RC qualification continuation — 2026-11-19
+=================================================================
+
+Source and environment
+----------------------
+GitHub repository: DalsinAI/gfopenregex
+Alpha2 source/tag commit: e01a07cbf1c7927f60d4dd40e9d4a86699186b12
+Limit ordering fix: 976daa1ce2d1f53b5e971d844cdb2bef0243ea09
+Limit error-classification fix tested here: 641ec2a721e0fd6d1e73680ef6f1b9b3308664e8
+Cradle: 0.70.0 on daletop
+Isolated lab: lab:gfopenregex-rc23-20261119
+Lab source: Instance-23, AmigaOS 3.2.3, AC090 native A1200/AGA guest
+Clean Cradle stove build: j20261119T035404-e283cc, os32-gcc16, exit 0
+
+Built artifact hashes used in the final native pass
+---------------------------------------------------
+c/Regex          cd68d79babbb074f4eb77bc857c744653395d53e8d629e7f710905313d2a19f7
+lib/regex.library e18302e1e6c44ba17aa3b5acfcfa8141a4b6478965fcf770463eb4a5c4ec41bd
+lib/aregex.library 9b71f1c12c6852d395d7c3645ed633792833d88773f8fe4752116e5169c22729
+tests/RegexTest  2d1f55639a456d8479f51cc080c63c60de691b5117a7bc1babec0eec64fe6ccb
+tests/all.txt     e8512afdde4a37be835485bd252683823adc224cc7fc9c0707ea0999cb0d7b6d
+
+Defects found in alpha2
+-----------------------
+1. C:Regex applied LIMIT before regcomp(), when regex_t was not yet valid, and
+   ignored the failed regsetmatchlimit() result. Low-limit cases therefore
+   behaved as ordinary no-match (RC5).
+2. After fixing the ordering, regex.library correctly returned REG_ESPACE on
+   match-limit exhaustion, but C:Regex treated only REG_BADPAT as a match
+   error. It again converted limit exhaustion to RC5.
+
+Native regression results after both fixes
+------------------------------------------
+Deterministic pattern: 50 repetitions of (?C)a against 50 'a' bytes.
+
+Regex <pattern> a50.txt LIMIT=1 QUIET
+Regex: PCRE2 match error: PCRE2 allocation or match limit exceeded
+CALLOUT50_LIMIT1_RC=20
+
+Regex <pattern> a50.txt LIMIT=100000 QUIET
+CALLOUT50_HIGH_LIMIT_RC=0
+
+Malformed UTF-8 input (C3 28), UTF8 UCP:
+Regex: PCRE2 match error: invalid PCRE2 pattern or match error
+MALFORMED_UTF8_RC=20
+
+Ordinary no-match:
+NO_MATCH_RC=5
+
+Classic library regression:
+RegexTest: 1147 cases, 0 differ
+REGEXTEST_RC=0
+
+Concurrent open/compile/limit/match/free/close stress
+-----------------------------------------------------
+Initial smoke: 8 concurrent workers x 25 iterations, all WORKER_DONE.
+
+Sustained pass 1: 8 concurrent workers x 100 iterations, all WORKER100_DONE.
+Before:
+chip 2069104 available; fast 257555368; total 259624472
+After:
+chip 2069104 available; fast 257554856; total 259623960
+
+Sustained pass 2: another 8 x 100 iterations, all WORKER100_DONE.
+Before:
+chip 2069104 available; fast 257554856; total 259623960
+After:
+chip 2069104 available; fast 257554856; total 259623960
+
+Total in this continuation: 1,800 concurrent-worker command lifecycles
+(200 smoke + 800 + 800). The second sustained pass had identical before/after
+memory figures.
+
+Release gate
+------------
+The alpha2 release must remain a prerelease and must not be promoted to RC:
+its published C:Regex contains both LIMIT defects above. Current main fixes
+them, but still requires a new candidate package and qualification.
+
+Still open before an RC claim:
+- deterministic allocator-failure injection and recovery
+- full upstream PCRE2 regression suite
+- real classic 68040 hardware
+- AROS compatibility
+- complete interactive Workbench Installer validation of the replacement package

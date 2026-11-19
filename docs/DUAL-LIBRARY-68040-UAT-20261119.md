@@ -16,3 +16,27 @@
 **Evidence files:** `tests/evidence/aregex-library-1147-68040-guest-pass.log` and `tests/evidence/regex-pcre2-shared-library-68040-guest-pass.log`.
 
 **Remaining qualification:** guest library version/open/close under concurrent callers, allocator fault injection, UTF-8 malformed data and pathological match limits, real 68040 hardware, AROS compatibility, semantic migration of old `regex.library`-linked applications. No claim of full PCRE2 upstream test-suite completion. The Amiga Installer script is packaged but its full interactive Workbench workflow has not been exercised.
+
+
+## RC qualification continuation
+
+A second isolated AmigaOS 3.2.3 AC090 guest pass found and fixed two
+`C:Regex LIMIT=` defects: the limit was applied before `regcomp()`, and
+`REG_ESPACE` match-limit exhaustion was misclassified as an ordinary
+no-match. The fixes are commits `976daa1ce2d1f53b5e971d844cdb2bef0243ea09`
+and `641ec2a721e0fd6d1e73680ef6f1b9b3308664e8`.
+
+After both fixes, a deterministic 50-callout pattern returns RC20 and
+`PCRE2 allocation or match limit exceeded` with `LIMIT=1`, while the same
+case returns RC0 with `LIMIT=100000`. Malformed UTF-8 returns RC20 and an
+ordinary no-match remains RC5. Two consecutive 8-worker × 100-iteration
+open/compile/limit/match/free/close passes completed, after an 8 × 25 smoke
+pass; all 1,800 command lifecycles finished and the second sustained pass had
+identical before/after guest memory figures.
+
+See
+`tests/evidence/regex-limit-concurrency-68040-rc-20261119.log` for the
+native output, hashes and exact release gate. The published alpha2 remains a
+prerelease because it predates both fixes. Allocator-failure injection, full
+upstream PCRE2 tests, real 68040 hardware, AROS, and complete interactive
+Installer validation remain open.

@@ -9,14 +9,14 @@ set -eu
 HERE=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 V=$1
 OUT=${2:-"$HERE/dist"}
-B="$HERE/build-amiga"
+B=${BUILD_OUTPUT:-"$HERE/build-amiga"}
 N="GFOpenRegex-$V"
 TOP="$OUT/$N"
 R="$TOP/GFOpenRegex"
 rm -rf "$TOP" "$OUT/$N.lha" "$OUT/$N.zip"
 mkdir -p "$R/Libs" "$R/C" "$R/Tests" "$R/Docs" "$R/SDK/Include" "$R/SDK/SFD" "$R/SDK/FD" "$R/SDK/Lib"
 cp "$B/lib/regex.library" "$R/Libs/"
-cp "$B/c/Regex" "$R/C/"
+cp "$B/c/ARegex" "$B/c/Regex" "$R/C/"
 cp "$B/tests/RegexTest" "$R/Tests/"
 cp "$B/tests/all.txt" "$R/Tests/regex-cases.txt"
 cp -R "$HERE/include/regex.h" "$HERE/include/libraries" "$HERE/include/proto" \
@@ -24,16 +24,21 @@ cp -R "$HERE/include/regex.h" "$HERE/include/libraries" "$HERE/include/proto" \
 cp "$HERE/include/sfd/regex_lib.sfd" "$R/SDK/SFD/"
 cp "$HERE/include/fd/regex_lib.fd" "$R/SDK/FD/"
 cp "$B/lib/libregex.a" "$R/SDK/Lib/"
-cp "$HERE/docs/regex.library.md" "$HERE/README.md" "$HERE/LICENSE" "$R/Docs/"
+cp "$HERE/docs/regex.library.md" "$HERE/docs/REGEX-PCRE2-COMMAND.md" "$HERE/README.md" "$HERE/LICENSE" "$R/Docs/"
+cp "$HERE/pcre2/PCRE2-LICENCE.md" "$R/Docs/PCRE2-LICENCE.md"
 n=$(grep -cv '^#' "$B/tests/all.txt" || true)
 COMMIT=$(git -C "$HERE" rev-parse --short HEAD 2>/dev/null || echo unknown)
 cat > "$R/ReadMe.txt" <<TXT
 GFOpenRegex $V
 regex.library: POSIX regular expressions for AmigaOS 3.x, Perl syntax
 and UTF-8 as options. Clean room. MIT licence. AmiCradle Team.
+C:ARegex: original command, uses classic MIT regex.library.
+C:Regex: PCRE2 10.49-backed replacement, with modern pattern syntax.
+The new command links PCRE2 under its original BSD-3-Clause + PCRE2
+exception licence; our integration is MIT; see Docs/PCRE2-LICENCE.md.
 
 Install:   double-click Install-GFOpenRegex (beside this drawer), or
-           Copy Libs/regex.library LIBS: and Copy C/Regex C:
+           Copy Libs/regex.library LIBS: and Copy C/ARegex and C/Regex C:
 Command:   Regex PATTERN [FILES] [EXTENDED] [PERL] [NOCASE] ... (Regex ?)
 Test:      CD GFOpenRegex/Tests, then RegexTest regex-cases.txt
            (expects "RegexTest: $n cases, 0 differ")
